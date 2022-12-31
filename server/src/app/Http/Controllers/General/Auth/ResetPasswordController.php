@@ -8,7 +8,10 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\User\auth\ResetPasswordRequest;
+use App\Jobs\Auth\CompletePasswordResetNotificationJobs;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Models\User;
+
 
 class ResetPasswordController extends Controller
 {
@@ -22,6 +25,12 @@ class ResetPasswordController extends Controller
     | explore this trait and override any methods you wish to tweak.
     |
     */
+    public $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     public function resetPassword(ResetPasswordRequest $request)
     {
@@ -33,6 +42,10 @@ class ResetPasswordController extends Controller
                 ])->save();
     
                 event(new PasswordReset($user));
+
+                $model = $this->user->where('email', $request->email)->first();
+
+                CompletePasswordResetNotificationJobs::dispatch($model, $request->email, $request->password);
             }
         );
 

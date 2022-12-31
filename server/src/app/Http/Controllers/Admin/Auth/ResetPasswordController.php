@@ -9,10 +9,19 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Http\Requests\Admin\auth\ResetPasswordRequest;
+use App\Jobs\Auth\CompletePasswordResetNotificationJobs;
 use Illuminate\Auth\Events\PasswordReset;
+use App\Models\Admin;
 
 class ResetPasswordController extends Controller
 {
+    public $admin;
+
+    public function __construct(Admin $admin)
+    {
+        $this->admin = $admin;
+    }
+
     public function resetPassword(ResetPasswordRequest $request)
     {
         $status = Password::broker('admins')->reset(
@@ -25,6 +34,10 @@ class ResetPasswordController extends Controller
                 event(new PasswordReset($user));
             }
         );
+
+        $model = $this->admin->where('email', $request->email)->first();
+
+        CompletePasswordResetNotificationJobs::dispatch($model, $request->email, $request->password);
 
         return $status == Password::PASSWORD_RESET
                 ? response()->json(['message' => 'パスワードの再設定が完了しました。', 'status' => true], 201)

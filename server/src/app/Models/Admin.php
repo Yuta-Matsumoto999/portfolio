@@ -3,11 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\Api\Auth\CompletePasswordResetNotification;
+use App\Notifications\Api\Auth\RegisteredNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Notifications\Api\Admin\Auth\ResetPasswordNotification;
+use App\Notifications\Api\Auth\Admin\ResetPasswordNotification;
 
 class Admin extends Authenticatable
 {
@@ -63,5 +65,15 @@ class Admin extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
+    }
+
+    public function sendRegisteredNotification($user_name, $user_email, $user_password, $user_organization_name)
+    {
+        return $this->notify(new RegisteredNotification($user_name, $user_email, $user_password, $user_organization_name));
+    }
+    
+    public function sendCompletePasswordResetNotification($user_name, $user_email, $user_password)
+    {
+        return $this->notify(new CompletePasswordResetNotification($user_name, $user_email, $user_password));
     }
 }

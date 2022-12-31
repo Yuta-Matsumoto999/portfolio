@@ -5,6 +5,7 @@ namespace App\Http\Controllers\General\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Auth\RegisterRequest;
 use App\Providers\RouteServiceProvider;
+use App\Jobs\Auth\RegisteredNotificationJobs;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -63,6 +64,8 @@ class RegisterController extends Controller
         event(new Registered($user = $this->create($newUser)));
 
         Auth::guard('users')->login($user);
+
+        RegisteredNotificationJobs::dispatch($user, $request->name, $request->email, $request->password, $request->organization_name);
 
         return response()->json(Auth::guard('users')->user());
     }

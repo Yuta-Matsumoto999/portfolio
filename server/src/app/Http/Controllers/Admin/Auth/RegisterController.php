@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\RegisterRequest;
+use App\Jobs\Auth\RegisteredNotificationJobs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -11,6 +12,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Models\Organization;
+use App\Notifications\Api\Admin\Auth\RegisteredNotification;
 use Illuminate\Support\Str;
 
 class RegisterController extends Controller
@@ -45,6 +47,8 @@ class RegisterController extends Controller
         ];
 
         event(new Registered($admin = $this->create($newAdmin)));
+
+        RegisteredNotificationJobs::dispatch($admin, $request->name, $request->email, $request->password, $request->organization_name);
 
         Auth::guard('admins')->login($admin);
 
