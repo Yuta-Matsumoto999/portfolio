@@ -40,9 +40,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'generals' => [
+        'users' => [
             'driver' => 'session',
-            'provider' => 'generals'
+            'provider' => 'users'
         ],
         'admins' => [
             'driver' => 'session',
@@ -69,10 +69,6 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
-        ],
-        'generals' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
@@ -105,12 +101,6 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
-            'table' => 'password_resets',
-            'expire' => 60,
-            'throttle' => 60,
-        ],
-        'generals' => [
-            'provider' => 'generals',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
