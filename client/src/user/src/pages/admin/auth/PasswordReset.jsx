@@ -43,7 +43,7 @@ const PasswordReset = () => {
         const accessPasswordResetApi = async () => {
             try {
                 const res = await authApi.sendResetLink({ email });
-                navigate("/admin/authenticate/sended-reset-link")
+                navigate("/admin/sended-reset-link")
             } catch (err) {
                 setLoading(false);
 
@@ -93,7 +93,7 @@ const PasswordReset = () => {
                 >
                 Send Email
             </LoadingButton>
-            <Button component={Link} to="/admin/authenticate/login" sx={{ marginTop: "15px", textAlign: "center"}}>
+            <Button component={Link} to="/admin/login" sx={{ marginTop: "15px", textAlign: "center"}}>
                 <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントをお持ちですか？</Typography>
                 <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>ログイン</Typography>
             </Button>

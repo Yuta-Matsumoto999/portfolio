@@ -89,7 +89,7 @@ const PasswordReset = () => {
         const accessResetPasswordApi = async () => {
             try {
                 const res = await authApi.resetPassword({ email, token, password, password_confirmation });
-                navigate("/admin/authenticate/complete-reset-password");
+                navigate("/admin/complete-reset-password");
             } catch (err) {
                 setLoading(false);
 

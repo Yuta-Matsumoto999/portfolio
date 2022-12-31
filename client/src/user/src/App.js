@@ -51,13 +51,13 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* admin */}
-          <Route path="/admin/authenticate" element={<AdminAuthLayout />}>
-            <Route path="/admin/authenticate/login" element={<AdminLogin />} />
-            <Route path="/admin/authenticate/register" element={<AdminRegister />} />
-            <Route path="/admin/authenticate/reset-password" element={<AdminPasswordReset />} />
-            <Route path='/admin/authenticate/sended-reset-link' element={<AdminSendedResetLink />} />
-            <Route path='/admin/authenticate/reset-password-form' element={<AdminResetPasswordForm />} />
-            <Route path='/admin/authenticate/complete-reset-password' element={<AdminCompleteResetPassword />} />
+          <Route path="/admin" element={<AdminAuthLayout />}>
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/register" element={<AdminRegister />} />
+            <Route path="/admin/reset-password" element={<AdminPasswordReset />} />
+            <Route path='/admin/sended-reset-link' element={<AdminSendedResetLink />} />
+            <Route path='/admin/reset-password-form' element={<AdminResetPasswordForm />} />
+            <Route path='/admin/complete-reset-password' element={<AdminCompleteResetPassword />} />
           </Route>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />

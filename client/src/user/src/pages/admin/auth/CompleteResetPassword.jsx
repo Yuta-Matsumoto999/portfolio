@@ -9,7 +9,7 @@ const CompleteResetPassword = () => {
         <Typography sx={{ fontSize: "0.9rem" }}>パスワードの再設定が完了しました。</Typography>
         <Typography sx={{ fontSize: "0.9rem", fontWeight: 800, marginTop: "15px" }}>新しいパスワードでログインしてください。</Typography>
         <Box sx={{ marginTop: "20px" }}>
-            <Button variant='contained' color='purple' component={Link} to="/admin/authenticate/login">
+            <Button variant='contained' color='purple' component={Link} to="/admin/login">
                 <Typography sx={{ color: "white" }}>ログインへ</Typography>
             </Button>
         </Box>

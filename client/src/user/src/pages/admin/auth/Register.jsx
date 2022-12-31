@@ -282,7 +282,7 @@ const Register = () => {
                 Sign Up
             </LoadingButton>
             </Box>
-            <Button component={Link} to="/admin/authenticate/login" sx={{ marginTop: "15px"}}>
+            <Button component={Link} to="/admin/login" sx={{ marginTop: "15px"}}>
                 <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントをお持ちですか？</Typography>
                 <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>ログイン</Typography>
             </Button>

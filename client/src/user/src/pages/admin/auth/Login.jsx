@@ -117,7 +117,7 @@ const Login = () => {
                 Sign In
             </LoadingButton>
             <Box sx={{ textAlign: "center" }}>
-                <Button component={Link} to="/admin/authenticate/reset-password" sx={{ marginTop: "10px" }}>
+                <Button component={Link} to="/admins/reset-password" sx={{ marginTop: "10px" }}>
                     <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>パスワードをお忘れですか？</Typography>
                 </Button>
             </Box>
@@ -159,7 +159,7 @@ const Login = () => {
                         </IconContext.Provider> 
                     </Button>
                 </Box>
-                <Button component={Link} to="/admin/authenticate/register" sx={{ marginTop: "15px"}}>
+                <Button component={Link} to="/admin/register" sx={{ marginTop: "15px"}}>
                     <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントを持っていませんか？</Typography>
                     <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>新規作成</Typography>
                 </Button>
