@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Notifications\Api\Auth\ResetPasswordNotification;
 
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,6 +20,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'organization_id',
+        'permission_id',
         'name',
         'email',
         'password',
@@ -48,8 +50,18 @@ class User extends Authenticatable
         return $this->belongsTo(Organization::class);
     }
 
-    public function positions()
+    public function permission()
     {
-        return $this->belongsToMany(Position::class);
+        return $this->belongsTo(Permission::class);
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }
