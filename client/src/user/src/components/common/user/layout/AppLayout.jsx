@@ -8,7 +8,7 @@ const AppLayout = () => {
     const authenticate = useGeneralAuth();
 
     if(authenticate === false) {
-        navigate("/authenticate/login");
+        navigate("/login");
     }
 
   return (

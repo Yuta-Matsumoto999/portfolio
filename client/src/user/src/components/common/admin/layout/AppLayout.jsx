@@ -8,7 +8,7 @@ const AppLayout = () => {
     const authenticate = useAdminAuth();
 
     if(authenticate === false) {
-        navigate("/admin/authenticate/login");
+        navigate("/admin/login");
     }
 
   return (
