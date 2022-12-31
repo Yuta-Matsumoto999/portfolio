@@ -30,7 +30,7 @@ class RegisterRequest extends FormRequest
             'name' => ['required', 'string', 'max:' . self::STRING_MAX_LENGTH],
             'email' => ['required', 'email', 'unique:admins', 'max:' . self::STRING_MAX_LENGTH],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'organization_name' => ['required',  'max:' . self::STRING_MAX_LENGTH],
+            'organization_name' => ['required', 'unique:organizations', 'max:' . self::STRING_MAX_LENGTH],
         ];
     }
 }
