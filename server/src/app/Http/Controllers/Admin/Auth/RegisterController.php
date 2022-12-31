@@ -30,11 +30,11 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request)
     {
         $newOrganization = [
-            "organization_name" => $request->only('organization_name'),
-            "organization_id" => Str::random(10),
+            "organization_name" => $request->organization_name,
+            "organization_unique_id" => Str::uuid()
         ];
 
-        $this->organization->fill($newOrganization)->save();
+        $this->createOrganization($newOrganization);
 
         $newAdmin = [
             'name' => $request->name,
@@ -54,5 +54,10 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return Admin::create($data);
+    }
+
+    protected function createOrganization(array $data)
+    {
+        return $this->organization->fill($data)->save();
     }
 }

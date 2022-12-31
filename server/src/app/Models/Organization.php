@@ -11,6 +11,7 @@ class Organization extends Model
 
     protected $fillable = [
         'organization_name',
+        'organization_unique_id'
     ];
 
     public function users()

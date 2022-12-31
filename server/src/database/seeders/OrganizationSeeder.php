@@ -18,7 +18,8 @@ class OrganizationSeeder extends Seeder
     {
         DB::table('organizations')->insert([
             [
-                "organization_name" => "test_team"
+                "organization_name" => "test_team",
+                "organization_unique_id" => Str::uuid()
             ]
         ]);
     }

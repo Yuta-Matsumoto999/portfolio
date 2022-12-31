@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('organizations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('organization_name')->unique();
+            $table->string('organization_unique_id')->unique();
             $table->timestamps();
         });
     }
