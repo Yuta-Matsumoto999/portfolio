@@ -117,7 +117,7 @@ const Login = () => {
                 Sign In
             </LoadingButton>
             <Box sx={{ textAlign: "center" }}>
-                <Button component={Link} to="/admins/reset-password" sx={{ marginTop: "10px" }}>
+                <Button component={Link} to="/admin/reset-password" sx={{ marginTop: "10px" }}>
                     <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>パスワードをお忘れですか？</Typography>
                 </Button>
             </Box>
