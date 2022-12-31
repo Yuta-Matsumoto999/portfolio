@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Notifications\Api\Admin\Auth;
+namespace App\Notifications\Api\Auth\Admin;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
