@@ -1,6 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
-namespace App\Notifications\Api\Auth;
+namespace App\Notifications\Api\User\Auth;
 
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Lang;
 
 class ResetPasswordNotification extends ResetPassword
 {
-    private const PASSWORD_RESET_ENDPOINT = 'http://localhost:3000/admin/authenticate/reset-password-form';
+    private const PASSWORD_RESET_ENDPOINT = 'http://localhost:3000/reset-password-form';
 
     /**
      * @param string $url
