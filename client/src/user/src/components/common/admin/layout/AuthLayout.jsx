@@ -41,7 +41,7 @@ const AuthLayout = () => {
                         top: "50%",
                         left: {"xs": 0, "lg": "50%"},
                         transform: {"xs": "translateY(-50%) translateX(0%)", "lg": "translateY(-50%) translateX(-50%)"},
-                        backgroundColor: "white", 
+                        backgroundColor: "#fff", 
                         zIndex: 100, 
                         padding: {"xs": "none", "lg": "8px"},
                         borderRadius: "10px", 

@@ -33,6 +33,18 @@ function App() {
       purple: {
         main: '#6c3cb4'
       },
+      gray: {
+        main: '#a4a4a4'
+      },
+      black: {
+        main: '#000000'
+      },
+      white: {
+        main: "#fff"
+      },
+      sidebarOpen: {
+        main: "#44448c"
+      },
       breakpoints: {
         values: {
           xs: 0,
