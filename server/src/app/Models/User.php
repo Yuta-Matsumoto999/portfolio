@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Position::class);
     }
 
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class);
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
@@ -68,5 +73,26 @@ class User extends Authenticatable
     public function sendCompletePasswordResetNotification($user_name, $user_email, $user_password)
     {
         return $this->notify(new CompletePasswordResetNotification($user_name, $user_email, $user_password));
+    }
+
+    // DBの生年月日から年齢を算出
+    public function getAge($birthday)
+    {
+        // 本日
+        $t_y = date('Y');
+        $t_m = date('m');
+        $t_d = date('d');
+
+        // 誕生日
+        list($b_y, $b_m, $b_d) = preg_split("/-|/| /", $birthday);
+        
+        $t_md = intval( sprintf("%02d%02d", $t_m, $t_d) );
+        $b_md = intval( sprintf("%02d%02d", $b_m, $b_d) );
+        
+        //-----年齢の計算
+        $age = $t_y - $b_y;
+        if($t_m * 100 + $t_d)  {
+            $age--;
+        }
     }
 }

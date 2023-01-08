@@ -42,7 +42,7 @@ const Sidebar = (props) => {
 
                 {menuItems.map((item, index) => {
                     return (
-                        <SidebarItem item={item} index={index} width={width} icon={Icon} closeSidebar={closeSidebar} />
+                        <SidebarItem item={item} index={index} key={index} width={width} icon={Icon} closeSidebar={closeSidebar} />
                     );
                 })}
 
