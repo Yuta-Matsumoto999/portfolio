@@ -1,4 +1,5 @@
 import React from 'react'
+import styled, { useTheme } from 'styled-components';
 import { Box } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
@@ -16,27 +17,27 @@ const AppLayout = () => {
     }
 
     const logout = async () => {
-      try {
-          await authApi.logout();
-          navigate("/admin/login");
-      } catch(err) {
-          console.log(err);
-      }
-    }
+        try {
+            await authApi.logout();
+            navigate("/admin/login");
+        } catch(err) {
+            console.log(err);
+        }
+        }
 
-    return (
-      <div>
-          <Box sx={{ display: "flex" }}>
-          <Sidebar logout={logout}/>
-                <Box sx ={{ flexGrow: 1, width: {"xs": "100%", "md": "max-content"}, backgroundColor: "#f4f4f4", height: "100vh" }}>
-                    <Header logout={logout}/>
-                    <Box>
-                        <Outlet />
+        return (
+        <div>
+            <Box sx={{ display: "flex" }}>
+            <Sidebar logout={logout}/>
+                    <Box sx ={{ flexGrow: 1, width: {"xs": "100%", "md": "max-content"}, backgroundColor: "#f4f4f4", minHeight: "100vh", height: "100%" }}>
+                        <Header logout={logout}/>
+                        <Box>
+                            <Outlet />
+                        </Box>
                     </Box>
-                </Box>
-          </Box>
-      </div>
-  )
+            </Box>
+        </div>
+    )
 }
 
 export default AppLayout

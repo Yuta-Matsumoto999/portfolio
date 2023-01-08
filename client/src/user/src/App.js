@@ -21,6 +21,7 @@ import SendedResetLink from './pages/user/auth/SendedResetLink';
 import ResetPasswordForm from './pages/user/auth/ResetPasswordForm';
 import CompleteResetPassword from './pages/user/auth/CompleteResetPassword';
 import Home from './pages/user/Home';
+import Team from './pages/admin/team/Team';
 
 function App() {
   const Theme = createTheme({
@@ -73,6 +74,7 @@ function App() {
           </Route>
           <Route path="/admin" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />
+            <Route path="team" element={<Team />} />
           </Route>
 
         {/* General */}
