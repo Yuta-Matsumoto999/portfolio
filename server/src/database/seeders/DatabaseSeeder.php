@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             PositionUserSeeder::class,
             AdminRoleSeeder::class,
+            TeamSeeder::class,
+            TeamUserSeeder::class
         ]);
     }
 }
