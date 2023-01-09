@@ -1,24 +1,44 @@
 import React, { useState } from 'react'
+import styled, { useTheme } from 'styled-components';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, Container, TextField, Typography } from '@mui/material';
+import { Button, Box, TextField, Typography } from '@mui/material';
 import AdminTeamApi from '../../../api/AdminTeamApi';
+import { BiCaretDown } from "react-icons/bi";
+import ColorPicker from '../../common/input/ColorPicker';
+import { useDispatch, useSelector } from 'react-redux';
+import { setTeam } from '../../../redux/features/teamSlice';
+
+const ColorInput = styled.input`
+    position: absolute;
+    left: 0;
+    opacity: 0;
+    width: 300px;
+`
 
 const TeamCreateDialog = (props) => {
+    const teams = useSelector((state) => state.team.value);
+    const dispatch = useDispatch();
     const [name, setName] = useState("");
+    const [color_code, setColorCode] = useState("#1569a8");
     const [newNameValidateErr, setNewNameValidateErr] = useState("");
+    const [colorCodeValidateErr, setColorCodeValidateErr] = useState("");
 
     const handleNewTeamName = async (e) => {
         setName(e.target.value);
+    }
+    const handleColorCode = (e) => {
+        setColorCode(e.target.value);
     }
 
     const handleCreateNewTeam = async (e) => {
         e.preventDefault();
 
         setNewNameValidateErr("");
+        setColorCodeValidateErr("");
 
         let error = false;
 
@@ -27,13 +47,33 @@ const TeamCreateDialog = (props) => {
             setNewNameValidateErr("新しいチーム名を入力してください。");
         }
 
+        if(color_code === "") {
+            error = true;
+            setColorCodeValidateErr("カラーを入力してください。");
+        }
+
         if(error) return;
 
         try {
-            await AdminTeamApi.create({ name });
+            const res = await AdminTeamApi.create({ name, color_code });
+            console.log(res);
+            const newTeams = [...teams, res];
+
+            dispatch(setTeam(newTeams));
+
+            props.handleClose();
         } catch (err) {
             const errors = Array(err.data.errors);
-            setNewNameValidateErr(errors.name);
+
+            errors.forEach((error) => {
+                if(error.name) {
+                    setNewNameValidateErr(error.name[0]);
+                }
+
+                if(error.color_code) {
+                    setColorCodeValidateErr(error.color_code[0]);
+                }
+            })
         }
     }
 
@@ -56,8 +96,10 @@ const TeamCreateDialog = (props) => {
                     type="text"
                     helperText={newNameValidateErr}
                     error={newNameValidateErr !== ""}
-                    sx={{marginTop: "10px", width: "300px"}}
+                    sx={{marginTop: "10px"}}
+                    fullWidth
                     />
+                    <ColorPicker colorCode={color_code} onChange={handleColorCode} validateErr={colorCodeValidateErr}/>
                 </DialogContent>
                 <DialogActions>
                     <Button type='submit' variant="contained" color="natural">
