@@ -9,6 +9,8 @@ import { setTeamUser } from '../../../redux/features/teamUserSlice'
 import { BiPlusCircle } from "react-icons/bi";
 import { DataGrid } from '@mui/x-data-grid';
 import TeamCreateDialog from '../../../components/admin/dialog/TeamCreateDialog'
+import useWindowSize from '../../../customHooks/useWindowSize'
+import TeamNameItem from '../../../components/admin/items/TeamNameItem'
 
 const Team = () => {
     const teamAndUser = useTeamAndUser();
@@ -19,6 +21,10 @@ const Team = () => {
 
     const [onClick, setOnClick] = useState(1);
     const [isShowCreateDialog, setIsShowCreateDialog] = useState(false);
+    const [width, height] = useWindowSize();
+    const mainContentPcWidth = width - 280;
+    const mainContentTabWidth = width - 100;
+    const mainContentMobileWidth = width - 30;
 
     const columns = [
         {
@@ -51,6 +57,7 @@ const Team = () => {
 
     const selectAllItems = (params) => {
         console.log(teamUser);
+        console.log(teams);
     }
 
     const handleOpenCreateDialog = () => {
@@ -68,12 +75,12 @@ const Team = () => {
                 <Button onClick={handleOpenCreateDialog} variant='contained' padding="0"><BiPlusCircle size="1.2rem"/><Typography sx={{ marginLeft: "5px" }}>create team</Typography></Button>
             </Box>
             <Box sx={{ padding: "20px", width: "100%" }}>
-                <Box sx={{ display: "flex",  borderBottom: "3px solid #eee", alignItems: "center", marginBottom: "25px" }}>
+                <Box sx={{ display: "flex",  borderBottom: "3px solid #eee", alignItems: "center", marginBottom: "25px", width: {"xs": mainContentMobileWidth, "sm": mainContentTabWidth,"md": mainContentPcWidth }, overflow: "scroll" }}>
                     {teams.map((team, index) => {
                         return (
-                            <Box key={index} sx={{ padding: "10px 20px", backgroundColor: onClick === team.id && team.color_code }}>
-                                <Typography fontWeight="600" sx={{ opacity: onClick === team.id ? 1 : 0.4 }}>{team.name}</Typography>
-                            </Box>
+                            <>
+                                <TeamNameItem onClick={onClick} team={team} key={index}/>
+                            </>
                         );
                     })}
                 </Box>
