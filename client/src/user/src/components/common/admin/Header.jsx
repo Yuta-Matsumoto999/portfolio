@@ -11,8 +11,8 @@ import { useEffect } from 'react';
 import { FaBell } from "react-icons/fa";
 import { height } from '@mui/system';
 import { BiSearchAlt2 } from "react-icons/bi";
-import UserMenu from './menu/UserMenu';
-import NotificationMenu from './menu/NotificationMenu';
+import UserMenu from '../menu/UserMenu';
+import NotificationMenu from '../menu/NotificationMenu';
 
 const Input = styled.input`
     border: none;
