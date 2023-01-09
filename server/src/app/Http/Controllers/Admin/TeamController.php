@@ -90,12 +90,13 @@ class TeamController extends Controller
 
         $newTeam = [
             "organization_id" => $organizationId,
-            "name" => $request->name
+            "name" => $request->name,
+            "color_code" => $request->color_code
         ];
 
         $this->team->fill($newTeam)->save();
 
-        return response()->json('success create new team');
+        return response()->json($newTeam);
     }
 
     // teamの更新
