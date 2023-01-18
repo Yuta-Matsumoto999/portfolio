@@ -10,6 +10,7 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import TeamDraggable from '../../../components/admin/dnd/TeamDraggable';
 import TeamCreateMenu from '../../../components/admin/menu/TeamCreate';
 import AdminSearchApi from '../../../api/AdminSearchApi';
+import { teamSearch } from '../../../search/admin/TeamSearch';
 
 const UserListItem = styled.div`
     display: flex;
@@ -195,32 +196,9 @@ const Member = () => {
         }
 
         // 実際の検索処理
-        search(temp);
+        temp = teamSearch(temp, searchWord, filterQuery, sortQuery);
 
         dispatch(setTeam(temp));
-    }
-
-    const search = (temp) => {
-        temp.forEach((item, index) => {
-            let users = temp[index].users;
-
-            const searchedUsers = users.sort((a, b) => {
-                a = a["order"];
-                b = b["order"];
-
-                if(a < b) {
-                    return -1;
-                }
-
-                if(a > b) {
-                    return 1;
-                }
-
-                return 0;
-            })
-
-            temp[index] = {...temp[index], users: searchedUsers}
-        });
     }
     
     const openCreateMenu = (e) => {
