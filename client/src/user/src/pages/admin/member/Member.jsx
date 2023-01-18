@@ -1,20 +1,15 @@
 import styled, { useTheme } from 'styled-components';
-import { Avatar, Box, Button, dialogClasses, InputBase, Typography } from '@mui/material'
-import React, { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { Box, Button, InputBase, Typography } from '@mui/material'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import AdminTeamApi from '../../../api/AdminTeamApi'
-import useTeamAndUser from '../../../customHooks/useTeamAndUser'
 import { setTeam } from '../../../redux/features/teamSlice'
-import { setTeamUser } from '../../../redux/features/teamUserSlice'
-import { BiPlusCircle } from "react-icons/bi";
-import { DataGrid } from '@mui/x-data-grid';
-import useWindowSize from '../../../customHooks/useWindowSize'
-import { BiChevronRight, BiDotsVerticalRounded, BiCaretDown, BiSearchAlt, BiDotsHorizontal } from "react-icons/bi";
-import TeamEditMenu from '../../../components/admin/menu/TeamEditMenu';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { BiSearchAlt, BiDotsHorizontal } from "react-icons/bi";
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import TeamDraggable from '../../../components/admin/dnd/TeamDraggable';
 import TeamCreateMenu from '../../../components/admin/menu/TeamCreate';
+import AdminSearchApi from '../../../api/AdminSearchApi';
 
 const UserListItem = styled.div`
     display: flex;
@@ -43,20 +38,30 @@ const Member = () => {
     const TeamCreateOpen = Boolean(teamCreateAnchorEl);
     const [teamEditAnchorEl, setTeamEditAnchorEl] = useState(null);
     const teamEditOpen = Boolean(teamEditAnchorEl);
-    
+    const [searchWord, setSearchWord] = useState();
+    const [sortQuery, setSortQuery] = useState();
+    const [filterQuery, setFilterQuery] = useState();
+
     useEffect(() => {
         const getTeams = async () => {
             try{
                 const res = await AdminTeamApi.getTeamAndUser();
-
-                dispatch(setTeam(res));
-
+                getSearchQueries();
+                searchTeams(res);
             } catch (err) {
                 console.log(err);
             }
         }
         getTeams();
     },[]);
+
+    const getSearchQueries = async () => {
+        const searchQueries = await AdminSearchApi.getAttachSearchItems({
+            queryCategory: 1
+        });
+        setFilterQuery(searchQueries[0]);
+        setSortQuery(searchQueries[1]);
+    }
 
     const onDragEnd = (result) => {
         const list = [...teams];
@@ -162,9 +167,11 @@ const Member = () => {
         temp[endTeamIndex] = {...temp[endTeamIndex], users: endTeamUsers}
 
         // 全体の配列をdispatch
-        dispatch(setTeam(temp))
+        dispatch(setTeam(temp));
 
-        // api call
+
+        // ----- api call ------
+
         try {
             const res = await AdminTeamApi.replaceMember({
                 users: temp,
@@ -176,6 +183,46 @@ const Member = () => {
         }
     }
 
+    const searchTeams = (res) => {
+        let temp;
+
+        if(!res) {
+            // 検索項目が更新された時
+            temp = [...teams];
+        } else {
+            // ページ読み込み時
+            temp = res;
+        }
+
+        // 実際の検索処理
+        search(temp);
+
+        dispatch(setTeam(temp));
+    }
+
+    const search = (temp) => {
+        temp.forEach((item, index) => {
+            let users = temp[index].users;
+
+            const searchedUsers = users.sort((a, b) => {
+                a = a["order"];
+                b = b["order"];
+
+                if(a < b) {
+                    return -1;
+                }
+
+                if(a > b) {
+                    return 1;
+                }
+
+                return 0;
+            })
+
+            temp[index] = {...temp[index], users: searchedUsers}
+        });
+    }
+    
     const openCreateMenu = (e) => {
         setTeamCreateAnchorEl(e.currentTarget);
     }
