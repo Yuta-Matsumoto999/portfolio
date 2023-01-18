@@ -4,8 +4,9 @@ const AdminTeamApi = {
     getTeamAndUser: (params) => axiosClient.post("api/admin/v1/team/getTeamAndUser", params),
     create: (params) => axiosClient.post("api/admin/v1/team/register", params),
     update: (params) => axiosClient.post("api/admin/v1/team/update", params),
+    reOrder: (params) => axiosClient.post("api/admin/v1/team/reOrder", params),
     delete: (params) => axiosClient.delete("api/admin/v1/team/delete", params),
-    addUser: (params) => axiosClient.post("api/admin/v1/team/addUser", params)
+    replaceMember: (params) => axiosClient.post("api/admin/v1/team/replaceMember", params)
 }
 
 export default AdminTeamApi;

@@ -21,9 +21,11 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'organization_id',
+        'team_id',
         'name',
         'email',
         'password',
+        'order'
     ];
 
     /**
@@ -44,7 +46,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
+    
     public function organization()
     {
         return $this->belongsTo(Organization::class);
@@ -55,9 +57,9 @@ class User extends Authenticatable
         return $this->belongsToMany(Position::class);
     }
 
-    public function teams()
+    public function team()
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsTo(Team::class);
     }
 
     public function sendPasswordResetNotification($token): void

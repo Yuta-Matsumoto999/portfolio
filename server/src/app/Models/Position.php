@@ -10,7 +10,8 @@ class Position extends Model
     use HasFactory;
 
     protected $fillable = [
-        'position_name'
+        'position_name',
+        'color_code'
     ];
 
     public function users()

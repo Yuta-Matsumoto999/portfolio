@@ -17,16 +17,20 @@ class PositionSeeder extends Seeder
     {
         DB::table('positions')->insert([
             [
-                "position_name" => "GK"
+                "position_name" => "GK",
+                "color_code" => "#66CDAA"
             ],
             [
-                "position_name" => "DF" 
+                "position_name" => "DF",
+                "color_code" => "#AFEEEE"
             ],
             [
-                "position_name" => "MF"
+                "position_name" => "MF",
+                "color_code" => "#FFDEAD"
             ],
             [
-                "position_name" => "FW"
+                "position_name" => "FW",
+                "color_code" => "#FA8072"
             ]
         ]);
     }

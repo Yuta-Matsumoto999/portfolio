@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('organization_id')->constrained();
             $table->string('name');
             $table->string('color_code');
+            $table->string('order');
             $table->timestamps();
         });
     }

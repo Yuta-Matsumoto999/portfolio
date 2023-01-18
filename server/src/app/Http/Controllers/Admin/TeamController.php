@@ -8,7 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Team\TeamRequest;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\FilterQuery;
+use App\Models\FilterQueryValue;
 use App\Models\Organization;
+use App\Models\SortQuery;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -31,70 +34,31 @@ class TeamController extends Controller
         $this->user = $user;
     }
 
-    // teamとuserの取得
+    // teamの取得
+
     public function getTeamAndUser(Request $request)
     {
-        $teamId = $request->teamId;
-        $specifyTeam = $this->team->find($teamId);
-        $users = $specifyTeam->users()->get();
+        $teams = $this->team->with(['users', 'users.positions'])->orderBy("order")->get();
 
-        $userInfos = [];
-
-        foreach($users as $user) {
-            $positions = $user->positions()->get();
-
-            $calcAge = new Age;
-            $age = $calcAge->calc($user->birthday);
-
-            $calcGrade = new Grade;
-            $grade = $calcGrade->calc($user->birthday, $age);
-
-            $position1 = null;
-            $position2 = null;
-            $position3 = null;
-
-            foreach($positions as $key =>  $position) {
-                if($key + 1) {
-                    $position1 = $position->name;
-                } elseif($key + 2) {
-                    $position = $position->name;
-                } else {
-                    $position3 = $position->name;
-                }
-            }
-
-            $userInfo = [
-                "id" => $user->id,
-                "name" => $user->name,
-                "birthday" => $user->birthday,
-                "age" => $age,
-                "grade" => $grade,
-                "position1" => $position1,
-                "position2"=> $position2,
-                "position3" =>  $position3
-            ];
-
-            array_push($userInfos, $userInfo);
-        }
-
-        $teams = $this->team->all();
-
-        return response()->json([$teams, $userInfos]);
+        return response()->json($teams);
     }
 
     // teamの新規作成
     public function create(TeamRequest $request)
     {
-        $admin = $this->admin->find(Auth::guard('admins')->user()->id);
+        $admin = $this->admin->find(Auth::guard('admins')->user()->id)->with("organization")->first();
         $organizationId = $admin->organization->id;
 
         $newTeam = [
             "organization_id" => $organizationId,
             "name" => $request->name,
-            "color_code" => $request->color_code
+            "color_code" => $request->color_code,
+            "order" => $request->order
         ];
 
         $this->team->fill($newTeam)->save();
+        $newTeamId = ["id" => $this->team->id];
+        $newTeam = $newTeam + $newTeamId;
 
         return response()->json($newTeam);
     }
@@ -109,6 +73,18 @@ class TeamController extends Controller
         return response()->json('success update new team');
     }
 
+    // team表示順序の変更
+    public function reorder(Request $request)
+    {
+        $teams = $request->teams;
+
+        foreach($teams as $key => $team) {
+            $this->team->find($team["id"])->fill(["order" => $key])->save();
+        }
+
+        return response("success update team order");
+    }
+
     // teamの削除
     public function deleteTeam($teamId)
     {
@@ -120,18 +96,18 @@ class TeamController extends Controller
         return response()->json("success delete team");
     }
 
-
-    // teamへのuser紐付け
-    public function addUser(Request $request, $teamId)
+    // team memberの移動
+    public function replaceMember(Request $request)
     {
-        $users = $request->all();
+        $users = $request->users;
 
-        // ここに元々所属していたチームから解除する処理
-        
-        $team = $this->team->find($teamId);
+        // チームごとに配列のindexをorderに入れて、userを更新する
+        foreach($users as $team) {
+            foreach($team["users"] as $key => $user) {
+                $this->user->find($user["id"])->fill(["order" => $key, "team_id" => $user["team_id"]])->save();                
+            }
+        }
 
-        $team->users()->attache($users);
-
-        return response()->json("success add user");
+        return response()->json("success update user order");
     }
 }

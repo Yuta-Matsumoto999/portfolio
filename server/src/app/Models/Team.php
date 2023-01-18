@@ -12,7 +12,8 @@ class Team extends Model
     protected $fillable = [
         'organization_id',
         'name',
-        "color_code"
+        "color_code",
+        "order"
     ];
 
     public function organization()
@@ -22,6 +23,6 @@ class Team extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->hasMany(User::class);
     }
 }
