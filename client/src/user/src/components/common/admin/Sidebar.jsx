@@ -1,14 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useLayoutEffect, useRef } from 'react'
 import styled, { useTheme } from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
-import { Avatar, Box, Button } from '@mui/material';
+import { Avatar, Box, Button, ListItem } from '@mui/material';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { List, ListItemButton, Typography } from '@mui/material';
-import { BiCategory, BiSpreadsheet, BiPaste, BiGrid, BiPlayCircle, BiLayer, BiLogOut, BiCaretRight } from "react-icons/bi";
+import { BiCategory, BiSpreadsheet, BiPaste, BiGrid, BiPlayCircle, BiLayer, BiLogOut, BiCaretRight, BiChevronsLeft } from "react-icons/bi";
 import useWindowSize from '../../../customHooks/useWindowSize';
 import menuItems from '../../../utils/menuItems';
 import { setSidebar } from '../../../redux/features/sidebarSlice';
 import SidebarItem from './SidebarItem';
+import Drawer from '@mui/material/Drawer';
+import CssBaseline from '@mui/material/CssBaseline';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
 
 const Icon = styled.i`
     font-size: 1.4rem;
@@ -19,6 +25,7 @@ const Icon = styled.i`
     }
 `
 
+
 const Sidebar = (props) => {
     const navigate = useNavigate();
     const sidebarVisible = useSelector((state) => state.sidebar.value)
@@ -26,27 +33,45 @@ const Sidebar = (props) => {
 
     const [width, height] = useWindowSize();
 
-    const closeSidebar = (e) => {
-        const path = e.currentTarget.getAttribute('data-path');
-        if(path !== null && width < 600) {
-            dispatch(setSidebar(!sidebarVisible));
-        }
+    const handleVisibleSidebar = () => {
+        dispatch(setSidebar(!sidebarVisible));
     }
 
-    return (
-        <Box sx={{ display: width < 600 ? sidebarVisible ? "block" : "none" : "block", width: {'xs': "100%", 'sm': 60, 'md': 230}, minHeight: "100vh", position: {"xs": "absolute", "sm": "relative"}, top: {"xs": "10vh", "sm": 0}, zIndex: {"xs": 200, "sm": 1 } }}>
-            <List sx={{ width: {'xs': "100%", 'sm': 60, 'md': 230}, backgroundColor: "#34346c", color: "#fff", paddingTop: 0, minHeight: "100vh", height: "100%", paddingBottom: "30px" }}>
-                <Box sx={{ marginBottom: {"xs": "10x", "sm": "40px"}, display: {"xs": "none", "sm": "flex"}, justifyContent: "center", alignItems: "center", height: {"xs": "10vh", "sm": "8vh"}, padding: {"xs": "16px"}, borderBottom: "0.3px solid #47525c" }}>
-                    <Typography>ここにlogo</Typography>
-                </Box>
+    const drawerWidth = 240;
 
+    return (
+        <Drawer
+            sx={{ width: drawerWidth,
+                flexShrink: 0,
+                '.MuiDrawer-paper': {
+                    width: drawerWidth,
+                    boxSizing: 'border-box',
+                    background: "#34346c"
+                }, 
+            }}
+            variant="persistent"
+            transitionDuration={200}
+            anchor="left"
+            open={sidebarVisible}
+        >
+            <Box sx={{ padding: "0 10px" }}>
+                <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
+                    <IconButton onClick={handleVisibleSidebar} color='white'><BiChevronsLeft size="1.6rem" /></IconButton>
+                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                    <Typography textAlign="center">ここにlogo</Typography>
+                </Box>
+                
+            </Box>
+            <Box sx={{ color: "#fff", marginTop: "20px" }}>
                 {menuItems.map((item, index) => {
                     return (
-                        <SidebarItem item={item} index={index} key={index} width={width} icon={Icon} closeSidebar={closeSidebar} />
-                    );
+                        <SidebarItem item={item} icon={Icon} width={width}/> 
+                    )
                 })}
+            </Box>
 
-                {/* スマホのみで表示するログアウトボタン */}
+            {/* スマホのみで表示するログアウトボタン */}
 
                 {/* Sign Out */}
                 <Button onClick={props.logout} color='white' sx={{ width: "100%", display: {"xs": "block", "sm": "none"}, padding: "18px 15px", opacity: "0.3" }}>
@@ -57,9 +82,11 @@ const Sidebar = (props) => {
                         </Typography>
                     </Box>
                 </Button>
-            </List>
-        </Box>
+        </Drawer>
+
     )
 }
 
-export default Sidebar
+
+
+export default Sidebar;

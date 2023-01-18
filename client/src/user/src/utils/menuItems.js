@@ -14,80 +14,34 @@ const menuItems = [
         "path": null,
         "judgementActive": "schedule",
         "icon": <BiGrid />,
-        "child": [
-            {
-                "name": "All schedule",
-                "path": "/admin/schedule"
-            },
-            {
-                "name": "Register",
-                "path": "admin/schedule/register"
-            }
-        ],
         "mobileOnly": false
     },
     {
-        "name": "Team",
-        "path": null,
-        "judgementActive": "team",
+        "name": "Member",
+        "path": "/admin/member",
+        "judgementActive": "member",
         "icon": <BiPaste />,
-        "child": [
-            {
-                "name": "All team",
-                "path": "/admin/team"
-            },
-            {
-                "name": "Team register",
-                "path": "/admin/team/register"
-            },
-        ],
         "mobileOnly": false
     },
     {
         "name": "Game",
-        "path": null,
+        "path": "/admin/game",
         "judgementActive": "game",
         "icon": <BiPlayCircle />,
-        "child": [
-            {
-                "name": "All game",
-                "path": "/admin/game"
-            },
-            {
-                "name": "Register",
-                "path": "/admin/game/register"
-            }
-        ],
         "mobileOnly": false
     },
     {
         "name": "Training",
-        "path": null,
+        "path": "/admin/training",
         "judgementActive": "training",
         "icon": <BiBookBookmark />,
-        "child": [
-            {
-                "name": "All training",
-                "path": "/admin/training"
-            },
-            {
-                "name": "Register",
-                "path": "/admin/training/register"
-            }
-        ],
         "mobileOnly": false
     },
     {
         "name": "Chat",
-        "path": null,
+        "path": "/admin/chat    ",
         "judgementActive": "chat",
         "icon": <BiChat />,
-        "child": [
-            {
-                "name": "All chat",
-                "path": "/admin/chat"
-            }            
-        ],
         "mobileOnly": false
     },
     {

@@ -48,39 +48,17 @@ const SidebarItem = (props) => {
 
     const path = useUrl();
     const [open, setOpen] = useState(false);
-    const [elementLeft, setElementLeft] = useState();
-    const [elementTop, setElementTop] = useState();
-    const [elementBottom, setElementBottom] = useState();
-    const dropdownListRef = useRef(null);
-
-    useEffect(() => {
-        const handleClickToCloseDropdown = (e) => {
-            const element = dropdownListRef.current;
-            if (!open || element?.contains(e.target)) return;
-            setOpen(false);
-        }
-
-        window.addEventListener("click", handleClickToCloseDropdown);
-        return () => {
-            window.removeEventListener("click", handleClickToCloseDropdown);
-        };
-    },
-    [open, dropdownListRef])
-
-    const handleSidebarItem = (e) => {
-        setOpen(!open);
-        props.closeSidebar(e)
-
-        if(props.width > 600 && props.width < 900) {
-            const elementRect = dropdownListRef.current?.getBoundingClientRect();
-            setElementTop(elementRect.top);
-            setElementLeft(elementRect.right);
-            setElementBottom(elementRect.bottom);
-        }
-    }
+    // const [elementLeft, setElementLeft] = useState();
+    // const [elementTop, setElementTop] = useState();
+    // const [elementBottom, setElementBottom] = useState();
+    // const dropdownListRef = useRef(null);
 
     const handleSubMenuItem = () => {
         dispatch(setSidebar(false));
+    }
+
+    const handleSidebarItem = () => {
+        setOpen(!open);
     }
 
     const Icon = props.icon
@@ -88,18 +66,18 @@ const SidebarItem = (props) => {
     return (
         <>
             {props.item.mobileOnly === false &&
-                <CustomListItemButton ref={dropdownListRef} sx={{ backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined , position: "relative", borderLeft: path === props.item.judgementActive ? "4px solid #6E6EF8" :"none" }} onClick={handleSidebarItem} component={props.item.path ? Link : undefined} to={props.item.path} key={props.index} data-path={props.item.path}>
+                <CustomListItemButton key={props.item.id} sx={{ backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined , position: "relative", borderLeft: path === props.item.judgementActive ? "4px solid #6E6EF8" :"none" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
                     <Icon>
                         {props.item.icon}
                     </Icon>
-                    <Typography fontWeight="600" fontSize="1rem" sx={{ marginLeft: "10px", display: {'xs': "block", 'sm': 'none', 'md': "block"} }}>
+                    <Typography fontWeight="600" fontSize="1rem" sx={{ marginLeft: "10px" }}>
                         {props.item.name}
                     </Typography>
 
                 </CustomListItemButton>
             }
             {props.item.mobileOnly === true &&
-                <CustomListItemButtonMobileOnly ref={dropdownListRef} sx={{ display: {"xs": "flex", "sm": "none"}, backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined, position: "relative" }} onClick={props.item.child && handleSidebarItem} component={props.item.path ? Link : undefined} to={props.item.path} key={props.index} data-path={props.item.path}>
+                <CustomListItemButtonMobileOnly key={props.item.id} sx={{ display: {"xs": "flex", "sm": "none"}, backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined, position: "relative" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
                     {props.item.type === "auth" &&
                         <>
                             <Avatar sx={{ height: {"xs": "2.8vh", "sm": "3vh"}, width: {"xs": "2.8vh", "sm": "3vh"} }} alt={user.name} src="" />
@@ -110,9 +88,10 @@ const SidebarItem = (props) => {
                     }
                 </CustomListItemButtonMobileOnly>
             }
+
             {props.item.child !== null &&
                     open &&
-                    <Box sx={{ backgroundColor: "#44448c", position: {"sm": "absolute", "md": "relative"}, top: {"sm": elementTop, "md": 0 }, left: {"sm": elementLeft, "md": 0 }, width: {"sm": "180px", "md": "100%"}, padding: {"sm": "5px", "md": 0} }}>
+                    <Box sx={{ backgroundColor: "#44448c", position: "relative" }}>
                         {props.item.child.map((subMenu, index) => {
                             return (
                                 <SidebarSubMenuItem subMenu={subMenu} handleSubMenuItem={handleSubMenuItem} path={path} index={index}/>

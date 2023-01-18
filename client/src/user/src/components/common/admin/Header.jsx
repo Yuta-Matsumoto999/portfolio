@@ -1,5 +1,5 @@
 import styled, { useTheme } from 'styled-components';
-import { Avatar, Typography, Box, Button } from '@mui/material'
+import { Avatar, Typography, Box, Button, IconButton } from '@mui/material'
 import React from 'react'
 import { useDispatch, useSelector } from "react-redux";
 import { FaCaretDown } from "react-icons/fa";
@@ -10,7 +10,7 @@ import { setSidebar } from '../../../redux/features/sidebarSlice';
 import { useEffect } from 'react';
 import { FaBell } from "react-icons/fa";
 import { height } from '@mui/system';
-import { BiSearchAlt2 } from "react-icons/bi";
+import { BiChevronsRight, BiMenu } from "react-icons/bi";
 import UserMenu from '../menu/UserMenu';
 import NotificationMenu from '../menu/NotificationMenu';
 
@@ -53,7 +53,7 @@ const NotificationButton = styled.button`
 
 const Header = (props) => {
     const user = useSelector((state) => state.admin.value);
-    const sidebar = useSelector((state) => state.sidebar.value);
+    const sidebarVisible = useSelector((state) => state.sidebar.value);
     const dispatch = useDispatch();
 
     const [anchorEl, setAnchorEl] = useState(null)
@@ -61,8 +61,10 @@ const Header = (props) => {
     const open = Boolean(anchorEl)
     const notificationOpen = Boolean(notificationAnchorEl); 
 
+    const [onHover, setOnHover] = useState(false);
+
     const handleSidebar = () => {
-        dispatch(setSidebar(!sidebar));
+        dispatch(setSidebar(!sidebarVisible));
     }
 
     const openUserEditMenuList = (e) => {
@@ -81,26 +83,27 @@ const Header = (props) => {
         setNotificationAnchorEl(null);
     }
 
+    const handelOnHover = () => {
+        setOnHover(true);
+    }
+
+    const handleLeaveHover = () => {
+        setOnHover(false);
+    }
+
     return (
         <div>
-            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: "space-between", padding: {"xs": "16px", "sm": "0 20px"}, height: {"xs": "10vh", "sm": "8vh"}, borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
-                <Form>
-                    <Box sx={{ display: {"xs": "none", "sm": "flex"}, alignItems: "center" }}>
-                        <Input type="text" placeholder='Search for anyone...'/>
-                        <Box sx={{ display: "flex", alignItems: "center" }}>
-                            <SearchButton><BiSearchAlt2 size="1.2rem" /></SearchButton>
-                        </Box>
-                    </Box>
-                </Form>
-                <Button onClick={handleSidebar} sx={{ padding:  0, display: {"xs": "flex", "sm": "none"}, justifyContent: "start", alignItems: "center" }} color='white'><FaAlignJustify size="20px"/></Button>
-                <Typography sx={{ display: {"xs" : "block", "sm": "none"} }}>ここにlogo</Typography>
+            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: sidebarVisible ? "end" : "space-between", padding: {"xs": "16px", "sm": "0 20px"}, height: {"xs": "60px", "sm": "40px"}, borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
+                <IconButton onClick={handleSidebar} onMouseEnter={handelOnHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : !onHover ? "flex" : "none" }} color="black"><BiMenu size="20px"/></IconButton>
+                <IconButton onClick={handleSidebar} onMouseLeave={handleLeaveHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : onHover ? "flex" : "none" }} color="black"><BiChevronsRight size="20px"/></IconButton>
+                <Typography sx={{ display: {"xs" : sidebarVisible ? "none" : "block", "sm": "none"} }}>ここにlogo</Typography>
                 <Box sx={{ display: {"xs": "none", "sm": "flex"}, alignItems: "center" }}>
                     <NotificationButton onClick={openNotificationList} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <FaBell color='gray' size="1.1rem"/>
                     </NotificationButton>
                     <NotificationMenu anchorEl={notificationAnchorEl} open={notificationOpen} onClose={closeNotificationMenuList} />
                     <Button onClick={openUserEditMenuList} color='gray' sx={{ display: {"xs": "none", "sm": "flex"} }}>
-                        <Avatar sx={{ height: "3.6vh", width: "3.6vh", marginRight: "5px" }} alt={user.name} src="" />
+                        <Avatar sx={{ height: "30px", width: "30px", marginRight: "5px" }} alt={user.name} src="" />
                         <FaCaretDown />
                     </Button>
                     <UserMenu username={user.name} anchorEl={anchorEl} open={open} onClose={closeUserEditMenuList} logout={props.logout}/>

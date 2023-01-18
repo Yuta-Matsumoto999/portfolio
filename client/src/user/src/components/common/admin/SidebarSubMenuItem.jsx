@@ -8,7 +8,7 @@ const SidebarSubMenuItem = (props) => {
     const dispatch = useDispatch();
 
     return (
-        <ListItemButton sx={{ width: "100%", display: "flex", alignItems: "center", padding: {"xs": "10px 15px 10px 40px", "sm": "6px", "md": "10px 15px 10px 40px"}, fontSize: "0.9rem" }} onClick={props.handleSubMenuItem} component={Link} to={props.subMenu.path} data-path={props.subMenu.path} key={props.index}>
+        <ListItemButton sx={{ width: "100%", display: "flex", alignItems: "center", padding: "10px 15px 10px 40px", fontSize: "0.9rem" }} onClick={props.handleSubMenuItem} component={Link} to={props.subMenu.path} data-path={props.subMenu.path} key={props.index}>
             <BiCaretRight />
             <Typography fontWeight="600" fontSize="0.9rem" sx={{ marginLeft: "10px" }}>
                 {props.subMenu.name}
