@@ -4,7 +4,6 @@ import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Avatar, Box, Button, ListItemButton, Typography } from '@mui/material'
 import { BiChevronRight } from "react-icons/bi";
 import { useDispatch, useSelector } from 'react-redux'
-import { display, padding } from '@mui/system';
 
 const UserBox = styled.div`
     display: flex;

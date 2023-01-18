@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,21 +33,20 @@ Route::middleware('auth:admins')->get('authenticate-check', function (Request $r
     return response()->json(Auth::guard('admins')->user());
 });
 
-// Route::post("team/getTeamAndUser", [TeamController::class, "getTeamAndUser"]);
-
 // auth middleware group
 Route::middleware(['auth:admins'])->group(function () {
 
     // schedule func
-    
+
 
     // team func
     Route::prefix('team')->group(function () {
         Route::post("getTeamAndUser", [TeamController::class, "getTeamAndUser"]);
         Route::post("register", [TeamController::class, "create"]);
         Route::post("update/{teamId}", [TeamController::class, "update"]);
+        Route::post("reOrder", [TeamController::class, "reorder"]);
         Route::delete("delete/{teamId}", [TeamController::class, "delete"]);
-        Route::post("addUser/{teamId}", [TeamController::class, "addUser"]);
+        Route::post("replaceMember", [TeamController::class, "replaceMember"]);
     });
 
 
@@ -56,11 +56,22 @@ Route::middleware(['auth:admins'])->group(function () {
     // training func
 
 
-
     // chat func
 
 
+    // search func
+    Route::prefix('search')->group(function () {
+        Route::get("getSearchItems", [SearchController::class, "getSearchItems"]);
+        Route::post("getAttachSearchItems", [SearchController::class, "getAttacheSearchItems"]);
+        Route::post("attachSearchItems", [SearchController::class, "attachSearchItem"]);
+        Route::post("detachSearchItem", [SearchController::class, "detachSearchItem"]);
+        Route::post("createSearchItem", [SearchController::class, "createSearchItem"]);
+        Route::post("updateSearchItem", [SearchController::class, "updateSearchItem"]);
+        Route::post("deleteSearchItem", [SearchController::class, "deleteSearchItem"]);
+    });
 
 
     // common setting
+
+
 });
