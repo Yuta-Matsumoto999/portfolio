@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
+use App\Models\AdminFilterQuery;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,12 +21,16 @@ class DatabaseSeeder extends Seeder
             PermissionSeeder::class,
             RoleSeeder::class,
             PositionSeeder::class,
+            TeamSeeder::class,
             UserSeeder::class,
             AdminSeeder::class,
             PositionUserSeeder::class,
             AdminRoleSeeder::class,
-            TeamSeeder::class,
-            TeamUserSeeder::class
+            FilterQuerySeeder::class,
+            SortQuerySeeder::class,
+            AdminFilterQuerySeeder::class,
+            AdminSortQuerySeeder::class,
+            FilterQueryValueSeeder::class
         ]);
     }
 }

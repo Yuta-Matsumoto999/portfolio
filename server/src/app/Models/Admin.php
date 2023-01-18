@@ -62,6 +62,16 @@ class Admin extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function filterQueries()
+    {
+        return $this->belongsToMany(FilterQuery::class);
+    }
+
+    public function sortQueries()
+    {
+        return $this->belongsToMany(SortQuery::class);
+    }
+
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new ResetPasswordNotification($token));
