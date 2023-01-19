@@ -33,7 +33,7 @@ const AppLayout = () => {
         <div>
             <Box sx={{ display: "flex" }}>
                 <Sidebar logout={logout}/>
-                <Box sx ={{ flexGrow: 1, width: sidebarVisible ? `calc(100% - ${drawerWidth}px)` : "max-content" , backgroundColor: "#f4f4f4", minHeight: "100vh", height: "100%", marginLeft: sidebarVisible ? 0 : `-${drawerWidth}px` }}>
+                <Box sx ={{ flexGrow: 1, width: sidebarVisible ? `calc(100% - ${drawerWidth}px)` : "max-content" , backgroundColor: "#fff", minHeight: "100vh", height: "100%", marginLeft: sidebarVisible ? 0 : `-${drawerWidth}px` }}>
                     <Header logout={logout}/>
                     <Box>
                         <Outlet />

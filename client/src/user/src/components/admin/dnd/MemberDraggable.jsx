@@ -10,6 +10,9 @@ const UserBox = styled.div`
     justify-content: space-between;
     align-items: center;
     padding: 12px 10px;
+    box-shadow: rgb(15 15 15 / 10%) 0px 0px 0px 1px, rgb(15 15 15 / 10%) 0px 2px 4px;
+    margin: 8px 0;
+    border-radius: 8px;
 
     :hover {
         background-color: #eee;

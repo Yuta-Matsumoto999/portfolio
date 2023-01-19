@@ -51,8 +51,6 @@ const TeamDraggable = (props) => {
                                 display: "flex", 
                                 justifyContent: "space-between", 
                                 alignItems: "center",
-                                padding: "5px 0 20px 0",
-                                borderBottom: "1px solid #eee"
                             }}
                             onMouseEnter={handleHover}
                             onMouseLeave={handleMouseLeave}
@@ -66,11 +64,12 @@ const TeamDraggable = (props) => {
                             >
                                 <Typography
                                     sx={{ 
-                                        padding: "3px 12px", 
+                                        padding: "3px 6px", 
                                         backgroundColor: props.team.color_code, 
                                         borderRadius: "3px", 
                                         marginRight: "10px" 
                                     }}
+                                    fontSize="0.9rem"
                                 >
                                     {props.team.name}
                                 </Typography>
