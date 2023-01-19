@@ -38,7 +38,10 @@ class TeamController extends Controller
 
     public function getTeamAndUser(Request $request)
     {
-        $teams = $this->team->with(['users', 'users.positions'])->orderBy("order")->get();
+        $admin = $this->admin->find(Auth::guard('admins')->user()->id)->with('organization')->first();
+        $organizationId = $admin->organization->id;
+
+        $teams = $this->team->where('organization_id', $organizationId)->with(['users', 'users.positions'])->orderBy("order")->get();
 
         return response()->json($teams);
     }
