@@ -5,31 +5,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import AdminTeamApi from '../../../api/AdminTeamApi'
 import { setTeam } from '../../../redux/features/teamSlice'
-import { BiSearchAlt, BiDotsHorizontal } from "react-icons/bi";
+import { BiSearchAlt, BiDotsHorizontal, BiChevronDown } from "react-icons/bi";
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import TeamDraggable from '../../../components/admin/dnd/TeamDraggable';
 import TeamCreateMenu from '../../../components/admin/menu/TeamCreate';
 import AdminSearchApi from '../../../api/AdminSearchApi';
 import { teamSearch } from '../../../search/admin/TeamSearch';
-
-const UserListItem = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-top: 1px solid #eee;
-
-    :hover {
-        background-color: #eee;
-        border-radius: 8px;
-    }
-`
-
-const MenuButton = styled.button`
-    border: none;
-    background-color: white;
-    width: 20px;
-`
+import { blue } from '@mui/material/colors';
 
 const Member = () => {
     const navigate = useNavigate();
@@ -40,29 +22,27 @@ const Member = () => {
     const [teamEditAnchorEl, setTeamEditAnchorEl] = useState(null);
     const teamEditOpen = Boolean(teamEditAnchorEl);
     const [searchWord, setSearchWord] = useState();
-    const [sortQuery, setSortQuery] = useState();
-    const [filterQuery, setFilterQuery] = useState();
+    const [filterQueries, setFilterQueries] = useState([]);
+    const [sortQueries, setSortQueries] = useState([]);
+    const [searchQueries, setSearchQueries] = useState();
 
     useEffect(() => {
         const getTeams = async () => {
             try{
                 const res = await AdminTeamApi.getTeamAndUser();
-                getSearchQueries();
-                searchTeams(res);
+                console.log(res);
+                const searchQueries = await AdminSearchApi.getAttachSearchItems({
+                    queryCategory: 1
+                });
+                setFilterQueries(searchQueries[0]);
+                setSortQueries(searchQueries[1]);
+                searchTeams(res, searchQueries[0], searchQueries[1]);
             } catch (err) {
                 console.log(err);
             }
         }
         getTeams();
     },[]);
-
-    const getSearchQueries = async () => {
-        const searchQueries = await AdminSearchApi.getAttachSearchItems({
-            queryCategory: 1
-        });
-        setFilterQuery(searchQueries[0]);
-        setSortQuery(searchQueries[1]);
-    }
 
     const onDragEnd = (result) => {
         const list = [...teams];
@@ -178,13 +158,12 @@ const Member = () => {
                 users: temp,
                 teamId: endTeamId,
             });
-            console.log(res);
         } catch (err) {
             console.log(err);
         }
     }
 
-    const searchTeams = (res) => {
+    const searchTeams = (res, filterQueries, sortQueries, searchWord) => {
         let temp;
 
         if(!res) {
@@ -196,7 +175,7 @@ const Member = () => {
         }
 
         // 実際の検索処理
-        temp = teamSearch(temp, searchWord, filterQuery, sortQuery);
+        temp = teamSearch(temp, searchWord, filterQueries, sortQueries, searchWord);
 
         dispatch(setTeam(temp));
     }
@@ -220,7 +199,7 @@ const Member = () => {
                     alignItems: "center",
                     padding: "20px 0 12px 0",
                     boxShadow: "rgb(233 233 240) 0px -1px 0px inset",
-                    margin: "0 20px 25px 20px",
+                    margin: "0 20px",
                 }}
             >
                 <Box
@@ -249,7 +228,8 @@ const Member = () => {
                     >
                         <Typography
                             fontWeight="600"
-                            fontSize="0.9rem"
+                            fontSize="0.8rem"
+                            color={filterQueries.length !== 0 ? "rgb(35, 131, 226)" : "rgba(55, 53, 47, 0.65)"}
                         >
                             フィルター
                         </Typography>
@@ -262,7 +242,8 @@ const Member = () => {
                     >
                         <Typography
                             fontWeight="600"
-                            fontSize="0.9rem"
+                            fontSize="0.8rem"
+                            color={sortQueries.length !== 0 ? "rgb(35, 131, 226)" : "rgba(55, 53, 47, 0.65)"}
                         >
                             並び替え
                         </Typography>
@@ -298,6 +279,63 @@ const Member = () => {
                     >
                         <BiDotsHorizontal size="1.4rem" />
                     </Button>
+                </Box>
+            </Box>
+            <Box sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "20px",
+                    color: "rgba(55, 53, 47, 0.65)"
+                }}
+            >
+                {sortQueries.map((item, index) => {
+                    return (
+                        <>
+                            <Box sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    margin: "0 5px",
+                                    padding: "3px 8px",
+                                    border: "1px solid #eee",
+                                    borderRadius: "14px",
+                                    border: "1px solid rgba(35, 131, 226, 0.35)",
+                                    color: "rgb(35, 131, 226);"
+                                }}
+                                key={item.id}
+                            >
+                                <Typography fontSize="0.8rem" fontWeight="600">{item.name}</Typography>
+                                <BiChevronDown />
+                            </Box>
+                        </>
+                    )
+                })}
+                {filterQueries.map((item, index) => {
+                    return (
+                        <>
+                            <Box sx={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                    margin: "0 5px",
+                                    padding: "3px 8px",
+                                    border: "1px solid #eee",
+                                    borderRadius: "14px",
+                                    border: "1px solid rgba(55, 53, 47, 0.16)",
+                                }}
+                                key={item.id}
+                            >
+                                <Typography fontSize="0.8rem" fontWeight="600">{item.name}</Typography>
+                                <BiChevronDown />
+                            </Box>
+                        </>
+                    )
+                })}
+                <Box sx={{
+                        margin: "0 5px"
+                    }}
+                >
+                    <Typography fontSize="0.9rem" fontWeight="400">➕検索項目を追加</Typography>
                 </Box>
             </Box>
             <Box sx={{ display: "flex", padding: "0 20px" }}>
