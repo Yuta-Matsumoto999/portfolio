@@ -29,10 +29,6 @@ class AdminSortQuerySeeder extends Seeder
                 "admin_id" => 1,
                 "sort_query_id" => 3
             ],
-            [
-                "admin_id" => 1,
-                "sort_query_id" => 4
-            ],
         ]);
     }
 }

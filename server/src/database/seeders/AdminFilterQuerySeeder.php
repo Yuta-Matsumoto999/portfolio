@@ -24,10 +24,6 @@ class AdminFilterQuerySeeder extends Seeder
                 "admin_id" => 1,
                 "filter_query_id" => 2
             ],
-            [
-                "admin_id" => 1,
-                "filter_query_id" => 3
-            ],
         ]);
     }
 }

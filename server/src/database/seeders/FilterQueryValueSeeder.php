@@ -32,38 +32,6 @@ class FilterQueryValueSeeder extends Seeder
                 "filter_query_id" => 1,
                 "name" => "FW"
             ],
-            [
-                "filter_query_id" => 2,
-                "name" => "15"
-            ],
-            [
-                "filter_query_id" => 2,
-                "name" => "16"
-            ],
-            [
-                "filter_query_id" => 2,
-                "name" => "17"
-            ],
-            [
-                "filter_query_id" => 2,
-                "name" => "18"
-            ],
-            [
-                "filter_query_id" => 3,
-                "name" => "中3"
-            ],
-            [
-                "filter_query_id" => 3,
-                "name" => "高1"
-            ],
-            [
-                "filter_query_id" => 3,
-                "name" => "高2"
-            ],
-            [
-                "filter_query_id" => 3,
-                "name" => "高3"
-            ],
         ]);
     }
 }

@@ -22,18 +22,13 @@ class SortQuerySeeder extends Seeder
                 "query_category" => 1
             ],
             [
-                "name" => "学年",
-                "key" => "grade",
+                "name" => "生年月日",
+                "key" => "birthday",
                 "query_category" => 1
             ],
             [
-                "name" => "年齢",
-                "key" => "age",
-                "query_category" => 1
-            ],
-            [
-                "position",
-                "key" => "position",
+                "name" => "ポジション",
+                "key" => "positions",
                 "query_category" => 1
             ]
         ]);

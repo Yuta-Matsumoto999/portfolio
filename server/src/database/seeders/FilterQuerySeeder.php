@@ -18,17 +18,12 @@ class FilterQuerySeeder extends Seeder
         DB::table('filter_queries')->insert([
             [
                 "name" => "ポジション",
-                "key" => "position",
+                "key" => "positions",
                 "query_category" => 1
             ],
             [
-                "name" => "学年",
-                "key" => "grade",
-                "query_category" => 1
-            ],
-            [
-                "name" => "年齢",
-                "key" => "age",
+                "name" => "チーム",
+                "key" => "name",
                 "query_category" => 1
             ],
         ]);

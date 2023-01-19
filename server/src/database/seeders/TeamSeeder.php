@@ -35,7 +35,7 @@ class TeamSeeder extends Seeder
                 "order" => 2
             ],
             [
-                "organization_id" => 1,
+                "organization_id" => 2,
                 "name" => "YOUTH",
                 "color_code" => "#FFDEAD",
                 "order" => 3
