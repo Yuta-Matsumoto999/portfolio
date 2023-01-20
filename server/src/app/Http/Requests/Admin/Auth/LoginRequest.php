@@ -27,8 +27,7 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'email'],
-            'password' => ['required', 'min:' . self::PASSWORD_MIN_LENGTH],
+            'uid' => ['required']
         ];
     }
 }

@@ -28,34 +28,26 @@ class LoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
+    private $admin;
+
+    public function __construct(Admin $admin)
+    {
+        $this->admin = $admin;
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'uid');
+    }
+
     public function login(LoginRequest $request)
     {
-        // validation check
-        $credentials = $request->all();
+        $admin = $this->admin->where('uid', $request->uid)->first();
 
-        // ユーザーの照合
-        if (Auth::guard('admins')->attempt($credentials)) {
+        if(Auth::guard('admins')->loginUsingId($admin->id)) {
             $request->session()->regenerate();
-    
             return response()->json(Auth::guard('admins')->user());
-        } else {
-            $existsUser = Admin::where('email', $request->email)->first();
-
-            if($existsUser == null) {
-                $error = [
-                    'errors' => [
-                        'email' => ['メールアドレスが無効です。']
-                    ]
-                ];
-            } elseif($existsUser->password !== $request->password) {
-                $error = [
-                    'errors' => [
-                        'password' => ['パスワードが一致しません。']
-                    ]
-                ];
-            }
-            return response()->json($error, 401);
-        }
+        };
     }
 
     public function logout(Request $request)
