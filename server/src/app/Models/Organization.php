@@ -10,7 +10,7 @@ class Organization extends Model
     use HasFactory;
 
     protected $fillable = [
-        'organization_name',
+        'name',
         'organization_unique_id'
     ];
 
