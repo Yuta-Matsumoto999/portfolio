@@ -23,14 +23,13 @@ class DatabaseSeeder extends Seeder
             PositionSeeder::class,
             TeamSeeder::class,
             UserSeeder::class,
-            AdminSeeder::class,
+            // AdminSeeder::class,
             PositionUserSeeder::class,
-            AdminRoleSeeder::class,
             FilterQuerySeeder::class,
             SortQuerySeeder::class,
-            AdminFilterQuerySeeder::class,
-            AdminSortQuerySeeder::class,
-            FilterQueryValueSeeder::class
+            // AdminFilterQuerySeeder::class,
+            // AdminSortQuerySeeder::class,
+            // FilterQueryValueSeeder::class
         ]);
     }
 }
