@@ -94,7 +94,7 @@ const AuthLayout = () => {
                                 variant='contained' 
                                 color="purple" 
                                 sx={{ 
-                                        color: "white",
+                                        color: "#fff",
                                     }}
                             >
                                 Learn more
