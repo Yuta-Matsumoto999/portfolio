@@ -1,30 +1,18 @@
 import React, { useEffect } from 'react'
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, createChainedFunction, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
-import { Link, useNavigate, useLocation  } from "react-router-dom";
+import { Link, useNavigate, useLocation, useAsyncError  } from "react-router-dom";
 import { useState } from 'react';
 import authApi from '../../../api/AdminAuthApi';
+import { auth } from '../../../firebase';
+import { verifyPasswordResetCode, confirmPasswordReset } from 'firebase/auth';
 
 const PasswordReset = () => {
     const navigate = useNavigate();
     const location = useLocation();
-
-    useEffect(() => {
-        const getUrlParams = () => {
-            const search = location.search;
-            const query = new URLSearchParams(search);
-            const email = query.get("email");
-            const token = query.get("token");
-
-            setEmail(email);
-            setToken(token);
-        }
-        getUrlParams()
-    }, [])
     
     // from value
-    const [email, setEmail] = useState("");
-    const [token, setToken] = useState("");
+    const [actionCode, setActionCode] = useState("");
     const [password, setPassword] = useState("");
     const [password_confirmation, setPassword_confirmation] = useState("");
 
@@ -32,10 +20,18 @@ const PasswordReset = () => {
     const [passwordValidateErr, setPasswordValidateErr] = useState("");
     const [passwordConfirmationValidateErr, setPasswordConfirmationValidateErr] = useState("");
 
-    // identify error
-    const [identifyErr, setIdentifyErr] = useState(false);
+    // alert
+    const [showAlert, setShowAlert] = useState(false);
 
     const [loading, setLoading] = useState(false)
+
+    // oddCodeを取得
+    useEffect(() => {
+        const queryParams = new URLSearchParams(window.location.search)
+        const oobCode = queryParams.get('oobCode') || ''
+        setActionCode(oobCode)
+    }, [])
+
 
     const handlePassword = (e) => {
         const newPassword = e.target.value;
@@ -43,8 +39,8 @@ const PasswordReset = () => {
 
         if(newPassword === "") {
             setPasswordValidateErr("パスワードを入力してください。")
-        } else if(newPassword.length < 8) {
-            setPasswordValidateErr("パスワードは8文字以上です。")
+        } else if(newPassword.length < 6) {
+            setPasswordValidateErr("パスワードは6文字以上です。")
         }
         setPassword(newPassword);
     }
@@ -55,6 +51,8 @@ const PasswordReset = () => {
 
         if(newPasswordConfirmation === "") {
             setPasswordConfirmationValidateErr("パスワード(確認用)を入力してください。")
+        } else if(newPasswordConfirmation.length < 6) {
+            setPasswordConfirmationValidateErr("パスワード(確認用)は6文字以上です。")
         } else if(password !== newPasswordConfirmation) {
             setPasswordConfirmationValidateErr("パスワードが一致しません。")
         }
@@ -75,52 +73,42 @@ const PasswordReset = () => {
         if(password === "") {
             validationErr = true;
             setPasswordValidateErr("パスワードを入力してください。");
+        } else if(password.length < 6) {
+            setPasswordValidateErr("パスワードは6文字以上です。")
         }
 
         if(password_confirmation === "") {
             validationErr = true;
             setPasswordConfirmationValidateErr("パスワード(確認用)を入力してください。");
+        } else if(password_confirmation.length < 6) {
+            validationErr = true;
+            setPasswordConfirmationValidateErr("パスワードは6文字以上です。");
+        } else if(password !== password_confirmation) {
+            validationErr = true;
+            setPasswordConfirmationValidateErr("パスワードが一致しません。")
         }
 
         if(validationErr) return;
 
         setLoading(true);
 
-        const accessResetPasswordApi = async () => {
-            try {
-                const res = await authApi.resetPassword({ email, token, password, password_confirmation });
-                navigate("/admin/complete-reset-password");
-            } catch (err) {
-                setLoading(false);
+        if(actionCode === '') return
 
-                console.log(err);
-
-                const errors = Array(err.data.errors);
-                
-                errors.forEach((error) => {
-                    if(error.password[0] === "パスワードが一致していません。") {
-                        setPasswordConfirmationValidateErr("パスワードが一致していません。")
-                    } else {
-                        setPasswordValidateErr(error.password[0]);
-                    }
-
-                    if(error.email) {
-                        setIdentifyErr(true);
-                    }
-
-                    if(error.token) {
-                        setIdentifyErr(true);
-                    }
+        try {
+            await verifyPasswordResetCode(auth, actionCode).then(() => {
+                confirmPasswordReset(auth, actionCode, password).then(() => {
+                    navigate("/admin/complete-reset-password");
                 })
+            })
+        } catch (err) {
+            console.log(err.code);
+
+            setLoading(false);
+
+            if(err.code === "auth/invalid-action-code") {
+                setShowAlert(true);
             }
         }
-
-        // initialize csrf token and access passwordReset api
-        await authApi.initialCsrfToken().then((res) => {
-            accessResetPasswordApi();
-        }).catch((err) => {
-            console.log(err);
-        })
     }
 
     return (
@@ -154,6 +142,28 @@ const PasswordReset = () => {
                 error={passwordConfirmationValidateErr !== ""}
                 disabled={loading}
             />
+
+            <Box sx={{
+                    margin: "10px 0",
+                    display: showAlert ? "block" : "none"
+                }}
+            >
+                <Alert severity="error">
+                    <AlertTitle>エラーが発生しました。</AlertTitle>
+                    リンクの有効期限切れもしくはアカウントが無効になっています。
+                    パスワードをリセットする場合は、再度リセットリンクを要求してください。
+                    <Box sx={{
+                            display: "flex",
+                            justifyContent: "end",
+                            alignItems: "center",
+                            margin: "10px"
+                        }}
+                    >
+                        <Button color='primary' variant='contained' component={Link} to="/admin/reset-password">リンクの要求</Button>
+                    </Box>
+                </Alert>
+            </Box>
+
             <LoadingButton
                 sx={{ mt: 3, mb: 2}} 
                 fullWidth type="submit" 
