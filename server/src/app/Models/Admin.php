@@ -24,8 +24,7 @@ class Admin extends Authenticatable
         'organization_id',
         'permission_id',
         'name',
-        'email',
-        'password',
+        'uid'
     ];
 
     /**

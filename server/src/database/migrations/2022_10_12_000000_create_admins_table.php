@@ -15,13 +15,10 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('organization_id')->constrained();
+            $table->foreignId('organization_id')->nullable()->constrained();
             $table->foreignId('permission_id')->constrained();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('uid', 1000);
             $table->timestamps();
         });
     }
