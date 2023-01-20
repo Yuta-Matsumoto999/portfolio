@@ -4,16 +4,12 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\RegisterRequest;
-use App\Jobs\Auth\RegisteredNotificationJobs;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 use App\Models\Organization;
-use App\Notifications\Api\Admin\Auth\RegisteredNotification;
-use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -22,8 +18,7 @@ class RegisterController extends Controller
     private $admin;
     private $organization;
 
-    public function __construct(Admin $admin,
-                                Organization $organization)
+    public function __construct(Admin $admin, Organization $organization)
     {
         $this->admin = $admin;
         $this->organization = $organization;
@@ -32,23 +27,22 @@ class RegisterController extends Controller
     public function register(RegisterRequest $request)
     {
         $newOrganization = [
-            "organization_name" => $request->organization_name,
+            "name" => "TEST ORGANIZATION",
             "organization_unique_id" => Str::uuid()
         ];
 
-        $this->createOrganization($newOrganization);
+        $this->organization->fill($newOrganization)->save();
+
+        $organizationId = $this->organization->id;
 
         $newAdmin = [
+            'organization_id' => $organizationId,
             'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'organization_id' => $this->organization->id,
+            'uid' => $request->uid,
             'permission_id' => 1
         ];
 
         event(new Registered($admin = $this->create($newAdmin)));
-
-        RegisteredNotificationJobs::dispatch($admin, $request->name, $request->email, $request->password, $request->organization_name);
 
         Auth::guard('admins')->login($admin);
 
@@ -58,10 +52,5 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         return Admin::create($data);
-    }
-
-    protected function createOrganization(array $data)
-    {
-        return $this->organization->fill($data)->save();
     }
 }
