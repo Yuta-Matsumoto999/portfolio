@@ -103,7 +103,7 @@ const Header = (props) => {
                     </NotificationButton>
                     <NotificationMenu anchorEl={notificationAnchorEl} open={notificationOpen} onClose={closeNotificationMenuList} />
                     <Button onClick={openUserEditMenuList} color='gray' sx={{ display: {"xs": "none", "sm": "flex"} }}>
-                        <Avatar sx={{ height: "30px", width: "30px", marginRight: "5px" }} alt={user.name} src="" />
+                        <Avatar sx={{ height: "30px", width: "30px", marginRight: "5px" }} alt={user.name} src={user.iconUrl} />
                         <FaCaretDown />
                     </Button>
                     <UserMenu username={user.name} anchorEl={anchorEl} open={open} onClose={closeUserEditMenuList} logout={props.logout}/>
