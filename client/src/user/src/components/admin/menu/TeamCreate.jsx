@@ -6,8 +6,10 @@ import { Box, Button, InputBase, ListItem, ListItemButton, Typography } from '@m
 import { useDispatch, useSelector } from 'react-redux'
 import AdminTeamApi from '../../../api/AdminTeamApi';
 import { setTeam } from '../../../redux/features/teamSlice';
+import { useNavigate } from 'react-router-dom';
 
 const TeamCreateMenu = (props) => {
+    const navigate = useNavigate();
     const teams = useSelector((state) => state.team.value);
     const dispatch = useDispatch();
     const [name, setName] = useState("");
@@ -29,16 +31,25 @@ const TeamCreateMenu = (props) => {
         if(error) return;
 
         try {
-            const index = teams.length - 1;
-            const a = teams[index];
-            const lastOrder = Number(a.order);
-            const order = lastOrder + 1;
+            let order;
+
+            if(teams.length !== 0) {
+                const index = teams.length - 1;
+                const a = teams[index];
+                const lastOrder = Number(a.order);
+                order = lastOrder + 1;
+            } else {
+                order = 0;  
+            }
+            
             let res = await AdminTeamApi.create({ name, color_code, order });
             res = {...res, users: []}
             const newTeams = [...teams, res];
             dispatch(setTeam(newTeams));
         } catch (err) {
-            console.log(err);
+            if(err.status === 419) {
+                navigate("/admin/login");
+            }
         }
 
         props.onClose()
