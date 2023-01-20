@@ -24,7 +24,7 @@ const useAdminAuth = () => {
             }
         }
         checkAuth();
-    })
+    }, [])
 
     return result;
 }
