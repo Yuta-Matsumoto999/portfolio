@@ -51,10 +51,11 @@ const Login = () => {
 
         const accessLoginApi = async (uid) => {
             try {
-                const user = await authApi.login({ uid });
+                const res = await authApi.login({ uid });
 
-                if(user) {
-                    navigate("/admin")
+                if(res) {
+                    const organizationUniqueKey = res[1];
+                    navigate(`/admin/${organizationUniqueKey}`);
                 }
             } catch (err) {
                 setLoading(false);

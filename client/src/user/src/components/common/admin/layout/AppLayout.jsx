@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled, { useTheme } from 'styled-components';
 import { Box } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
@@ -13,10 +13,20 @@ const AppLayout = () => {
     const location = useLocation();
     const authenticate = useAdminAuth();
     const sidebarVisible = useSelector((state) => state.sidebar.value)
+    const user = useSelector((state) => state.admin.value);
 
     if(authenticate === false) {
         navigate("/admin/login");
     }
+
+    useEffect(() => {
+        const queryParams = window.location.pathname;
+        const organizationUniqueKey = queryParams.split("/")[2];
+        
+        if(organizationUniqueKey !== user.organization_unique_key) {
+            navigate('/admin/login');
+        }
+    }, [])
 
     const logout = async () => {
         try {

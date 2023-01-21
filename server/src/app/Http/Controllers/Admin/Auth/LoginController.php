@@ -46,7 +46,10 @@ class LoginController extends Controller
 
         if(Auth::guard('admins')->loginUsingId($admin->id)) {
             $request->session()->regenerate();
-            return response()->json(Auth::guard('admins')->user());
+
+            $organizationUniqueKey =  $admin->organization->organization_unique_key;
+
+            return response()->json([Auth::guard('admins')->user(), $organizationUniqueKey]);
         };
     }
 
@@ -57,6 +60,21 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return response()->json("success logout");
+    }
+
+    public function checkAuthAndRegenerateSession(Request $request)
+    {
+        $admin= $this->admin->find(Auth::guard('admins')->user()->id);
+
+        $adminInfo = [
+            "id" => $admin->id,
+            "name" => $admin->name,
+            "iconUrl" => $admin->iconUrl,
+            "organization_name" => $admin->organization->name,
+            "organization_unique_key" => $admin->organization->organization_unique_key
+        ];
+
+        return response()->json($adminInfo);
     }
 }
 

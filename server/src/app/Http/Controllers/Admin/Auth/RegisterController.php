@@ -26,9 +26,11 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
+        $organization_unique_key = Str::uuid();
+
         $newOrganization = [
             "name" => "TEST ORGANIZATION",
-            "organization_unique_id" => Str::uuid()
+            "organization_unique_key" => $organization_unique_key
         ];
 
         $this->organization->fill($newOrganization)->save();
@@ -46,7 +48,7 @@ class RegisterController extends Controller
 
         Auth::guard('admins')->login($admin);
 
-        return response()->json(Auth::guard('admins')->user());
+        return response()->json([Auth::guard('admins')->user(), $organization_unique_key]);
     }
 
     protected function create(array $data)

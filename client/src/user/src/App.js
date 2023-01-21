@@ -72,9 +72,9 @@ function App() {
             <Route path='/admin/reset-password-form' element={<AdminResetPasswordForm />} />
             <Route path='/admin/complete-reset-password' element={<AdminCompleteResetPassword />} />
           </Route>
-          <Route path="/admin" element={<AdminAppLayout />}>
+          <Route path="/admin/:organizationUniqueKey" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="/admin/member" element={<Member />} />
+            <Route path="/admin/:organizationUniqueKey/member" element={<Member />} />
           </Route>
 
         {/* General */}

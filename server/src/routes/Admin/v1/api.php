@@ -28,13 +28,12 @@ Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkE
 Route::post("reset-password", [ResetPasswordController::class, 'resetPassword']);
 Route::post('logout', [LoginController::class, 'logout']);
 
-// 認証済み管理者の判別
-Route::middleware('auth:admins')->get('authenticate-check', function (Request $request) {
-    return response()->json(Auth::guard('admins')->user());
-});
 
 // auth middleware group
 Route::middleware(['auth:admins'])->group(function () {
+    // 認証済み管理者の判別
+    Route::get('authenticate-check', [LoginController::class, "checkAuthAndRegenerateSession"]);
+
 
     // schedule func
 

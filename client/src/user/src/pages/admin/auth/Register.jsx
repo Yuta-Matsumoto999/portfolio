@@ -158,9 +158,12 @@ const Register = () => {
 
         const accessRegisterApi = async (uid) => {
             try {
-                await AdminAuthApi.register({ name, uid });
+                const res = await AdminAuthApi.register({ name, uid });
 
-                navigate("/admin");
+                if(res) {
+                    const organizationUniqueKey = res[1];
+                    navigate(`/admin/${organizationUniqueKey}`);
+                }
             } catch (err) {
                 console.log(err);
             }
