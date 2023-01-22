@@ -34,6 +34,9 @@ Route::middleware(['auth:admins'])->group(function () {
     // 認証済み管理者の判別
     Route::get('authenticate-check', [LoginController::class, "checkAuthAndRegenerateSession"]);
 
+    // 組織unique_keyのcheck
+    Route::post('authenticate-organizationKey-check', [LoginController::class, "checkAuthOrganizationKey"]);
+
 
     // schedule func
 

@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Organization;
 
 class LoginController extends Controller
 {
@@ -29,10 +30,12 @@ class LoginController extends Controller
      */
 
     private $admin;
+    private $organization;
 
-    public function __construct(Admin $admin)
+    public function __construct(Admin $admin, Organization $organization)
     {
         $this->admin = $admin;
+        $this->organization = $organization;
     }
 
     protected function credentials(Request $request)
@@ -75,6 +78,22 @@ class LoginController extends Controller
         ];
 
         return response()->json($adminInfo);
+    }
+
+    public function checkAuthOrganizationKey(Request $request)
+    {
+        $organizationUniqueKey = $request->organization_unique_key;
+        $adminId = Auth::guard('admins')->user()->id;
+
+        $organizationExists = $this->organization->whereIn('organizations.id', function($query) use ($adminId) {
+            $query->from('admins')
+                    ->select('admins.organization_id')
+                    ->where('id', $adminId);
+        })
+        ->where('organization_unique_key', $organizationUniqueKey)
+        ->exists();
+
+        return response()->json($organizationExists);
     }
 }
 
