@@ -10,7 +10,7 @@ const useUrl = () => {
     useLayoutEffect(() => {
         const getBundlePath = () => {
             const path = location.pathname.split("/");
-            const firstRoutePath = path[2];
+            const firstRoutePath = path[3];
             
             setBundlePath(firstRoutePath);
         }
