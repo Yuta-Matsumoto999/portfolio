@@ -14,6 +14,11 @@ class Organization extends Model
         'organization_unique_key'
     ];
 
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
+
     public function users()
     {
         return $this->hasMany(User::class);
