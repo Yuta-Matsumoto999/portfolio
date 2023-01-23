@@ -2,8 +2,12 @@ import React from 'react'
 import { Box, Button, TextField, Typography } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import authApi from '../../../api/AdminAuthApi';
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, provider } from "../../../firebase";
+import AdminAuthApi from '../../../api/AdminAuthApi';
+import { async } from '@firebase/util';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -13,17 +17,15 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [password_confirmation, setPassword_confirmation] = useState("");
-    const [organization_name, setOrganization_name] = useState("");
 
     // validation error message
     const [nameValidateErr, setNameValidateErr] = useState("");
     const [emailValidateErr, setEmailValidateErr] = useState("");
     const [passwordValidateErr, setPasswordValidateErr] = useState("");
     const [passwordConfirmationValidateErr, setPasswordConfirmationValidateErr] = useState("");
-    const [organizationNameValidateErr, setOrganizationNameValidateErr] = useState("");
 
     const [loading, setLoading] = useState(false)
-    
+
     // name input
     const handleName = (e) => {
         const newName = e.target.value.trim();
@@ -69,8 +71,8 @@ const Register = () => {
 
         if(newPassword === "") {
             setPasswordValidateErr("パスワードを入力してください。")
-        } else if(newPassword.length < 8) {
-            setPasswordValidateErr("パスワードは8文字以上です。")
+        } else if(newPassword.length < 6) {
+            setPasswordValidateErr("パスワードは6文字以上です。")
         }
         setPassword(newPassword);
     }
@@ -90,8 +92,8 @@ const Register = () => {
 
         if(newPasswordConfirmation === "") {
             setPasswordConfirmationValidateErr("パスワード(確認用)を入力してください。");
-        } else if(newPasswordConfirmation.length < 8) {
-            setPasswordConfirmationValidateErr("パスワード(確認用)は、8文字以上です。")
+        } else if(newPasswordConfirmation.length < 6) {
+            setPasswordConfirmationValidateErr("パスワード(確認用)は、6文字以上です。")
         } else if(newPasswordConfirmation !== password) {
             setPasswordConfirmationValidateErr("パスワードが一致していません。")
         }
@@ -106,110 +108,96 @@ const Register = () => {
         }
     }
 
-    // organization_name input
-    const handleOrganizationName = (e) => {
-        const newOrganizationName = e.target.value;
-        setOrganizationNameValidateErr("");
-
-        if(newOrganizationName === "") {
-            setOrganizationNameValidateErr("組織名を入力してください。")
-        }
-
-        setOrganization_name(newOrganizationName);
-    }
-
-    const onFocusOrganizationName = (e) => {
-        const organizationNameValue = e.target.value;
-        setOrganizationNameValidateErr("");
-
-        if(organizationNameValue === "") {
-            setOrganizationNameValidateErr("組織名を入力してください")
-        }
-    }
-
-
     const register = async (e) => {
         e.preventDefault();
 
-        setLoading(true);
-
-        // initialize validate message
+         // initialize validate message
         setNameValidateErr("")
         setEmailValidateErr("")
         setPasswordValidateErr("")
         setPasswordConfirmationValidateErr("")
-        setOrganizationNameValidateErr("");
 
-        const accessRegisterApi = async () => {
-            try{
-                const user = await authApi.register({
-                    name,
-                    email,
-                    password,
-                    password_confirmation,
-                    organization_name
-                })
+        // validation
+        let error = false;
 
-                if(user) {
-                    navigate("/admin")
+        if(name === "") {
+            error = true;
+            setNameValidateErr("名前を入力してください。");
+        } else if(name > 255) {
+            error = true;
+            setNameValidateErr("名前は225文字以下で入力してください。");
+        }
+
+        if(email === "") {
+            error = true
+            setEmailValidateErr("メールアドレスを入力してください。")
+        }
+
+        if(password === "") {
+            error = true;
+            setPasswordValidateErr("パスワードを入力してください。")
+        } else if(password.length < 6) {
+            error = true;
+            setPasswordValidateErr("パスワードは6文字以上です。")
+        }
+
+        if(password_confirmation === "") {
+            error = true;
+            setPasswordConfirmationValidateErr("パスワード(確認用)を入力してください。");
+        } else if(password_confirmation.length < 6) {
+            error = true;
+            setPasswordConfirmationValidateErr("パスワード(確認用)は、6文字以上です。")
+        } else if(password_confirmation !== password) {
+            error = true;
+            setPasswordConfirmationValidateErr("パスワードが一致していません。")
+        }
+
+        if(error) return;
+
+        setLoading(true);
+
+        const accessRegisterApi = async (uid) => {
+            try {
+                const res = await AdminAuthApi.register({ name, uid });
+
+                if(res) {
+                    navigate("/admin/organization");
                 }
-
             } catch (err) {
-                setLoading(false);
-
-                const errors = Array(err.data.errors);
-                
-                errors.forEach((error) => {
-                    if(error.name) {
-                        setNameValidateErr(error.name[0]);
-                    }
-
-                    if(error.email) {
-                        setEmailValidateErr(error.email[0]);
-                    }
-
-                    if(error.password) {
-                        if(error.password[0] === "パスワードが一致していません。") {
-                            setPasswordConfirmationValidateErr("パスワードが一致していません。")
-                        } else {
-                            setPasswordValidateErr(error.password[0]);
-                        }
-                    }
-
-                    if(error.organization_name) {
-                        setOrganizationNameValidateErr(error.organization_name[0]);
-                    }
-                })
+                console.log(err);
             }
         }
 
-        // initialize csrf token and access register api
-        await authApi.initialCsrfToken().then((res) => {
-            accessRegisterApi();
-        }).catch((err) => {
-            console.log(err);
-        })
+        // firebaseへ新規登録
+        try{
+            const res = await createUserWithEmailAndPassword(auth, email, password);
+
+            const uid = res.user.uid;
+
+            await authApi.initialCsrfToken().then((res) => {
+                accessRegisterApi(uid);
+            });
+        } catch (err) {
+            setLoading(false);
+
+            console.log(err.code);
+
+            if (err.code === 'auth/invalid-email') {
+                // メールアドレスの形式がおかしい
+                setEmailValidateErr("メールアドレス形式で入力してください。");
+            } else if(err.code === "auth/email-already-in-use") {
+                // メールアドレスが既に存在している
+                setEmailValidateErr("メールアドレスはすでに使用されています。");
+            } else if("auth/weak-password") {
+                setPasswordValidateErr("パスワードは、6文字以上です。");
+            }
+        }
     }
 
     return (
         <>
         <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign Up</Typography>
         <Box component="form" onSubmit={register} noValidate>
-            <TextField 
-                fullWidth
-                onChange={handleOrganizationName}
-                onFocus={onFocusOrganizationName}
-                value={organization_name}
-                id="organization_name" 
-                label="組織名"
-                margin="normal" 
-                name="organization_name"
-                required
-                helperText={organizationNameValidateErr}
-                error={organizationNameValidateErr !== ""}
-                disabled={loading}
-            />
-            
             <TextField 
                 fullWidth
                 onChange={handleName}

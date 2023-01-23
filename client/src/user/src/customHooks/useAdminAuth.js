@@ -12,7 +12,7 @@ const useAdminAuth = () => {
     const [result, setResult] = useState();
 
     useLayoutEffect(() => {
-        const checkAuth = async () => {
+        const accessCheckAuth = async () => {
             try {
                 const user = await authApi.authenticateCheck();
                 dispatch(setAdmin(user));
@@ -23,8 +23,16 @@ const useAdminAuth = () => {
                 setResult(false);
             }
         }
-        checkAuth();
-    })
+
+        const initialCsrfToken = async() => {
+            await authApi.initialCsrfToken().then(() => {
+                accessCheckAuth();
+            })
+        }
+
+        initialCsrfToken();
+        
+    }, [navigate])
 
     return result;
 }

@@ -4,6 +4,8 @@ use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\TeamController;
 use Illuminate\Http\Request;
@@ -28,13 +30,20 @@ Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkE
 Route::post("reset-password", [ResetPasswordController::class, 'resetPassword']);
 Route::post('logout', [LoginController::class, 'logout']);
 
-// 認証済み管理者の判別
-Route::middleware('auth:admins')->get('authenticate-check', function (Request $request) {
-    return response()->json(Auth::guard('admins')->user());
-});
 
 // auth middleware group
 Route::middleware(['auth:admins'])->group(function () {
+    // 認証済み管理者の判別
+    Route::get('authenticate-check', [LoginController::class, "checkAuth"]);
+
+    // 組織unique_keyのcheck
+    Route::post('authenticate-organizationKey-check', [LoginController::class, "checkAuthOrganizationKey"]);
+
+    // plan
+    Route::prefix('plan')->group(function () {
+        Route::post("getPlans", [PlanController::class, "getPlans"]);
+        Route::post("attach", [PlanController::class, "attach"]);
+    });
 
     // schedule func
 
@@ -71,7 +80,9 @@ Route::middleware(['auth:admins'])->group(function () {
     });
 
 
-    // common setting
-
+    // organization setting
+    Route::prefix('organization')->group(function () {
+        Route::post("create", [OrganizationController::class, "create"]);
+    });
 
 });

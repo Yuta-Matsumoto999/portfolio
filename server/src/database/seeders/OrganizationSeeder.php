@@ -18,12 +18,12 @@ class OrganizationSeeder extends Seeder
     {
         DB::table('organizations')->insert([
             [
-                "organization_name" => "test_organization",
-                "organization_unique_id" => Str::uuid()
+                "name" => "test_organization",
+                "organization_unique_key" => Str::uuid()
             ],
             [
-                "organization_name" => "test_organization_2",
-                "organization_unique_id" => Str::uuid()
+                "name" => "test_organization_2",
+                "organization_unique_key" => Str::uuid()
             ]
         ]);
     }

@@ -8,6 +8,7 @@ const AdminAuthApi = {
     logout: () => axiosClient.post("api/admin/v1/logout"),
     sendResetLink: (params) => axiosClient.post("api/admin/v1/forget-password", params),
     resetPassword: (params) => axiosClient.post("api/admin/v1/reset-password", params),
+    checkUrl: (params) => axiosClient.post('/api/admin/v1/authenticate-organizationKey-check', params)
 }
 
 export default AdminAuthApi;

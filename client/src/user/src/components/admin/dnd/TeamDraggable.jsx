@@ -106,6 +106,7 @@ const TeamDraggable = (props) => {
                                     ref={provided.innerRef}
                                     {...provided.dragHandleProps}
                                     key={props.team.id}
+                                    sx={{ minHeight: "300px" }}
                                 >
                                     {props.team.users &&
                                         props.team.users.map((user, index) => {

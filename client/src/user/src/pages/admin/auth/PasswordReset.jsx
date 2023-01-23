@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react'
-import { Box, Button, TextField, Typography } from '@mui/material';
+import { Box, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 import authApi from '../../../api/AdminAuthApi';
+import { sendPasswordResetEmail } from "firebase/auth";
+import { auth } from "../../../firebase";
 
 const PasswordReset = () => {
     const navigate = useNavigate();
@@ -13,6 +15,9 @@ const PasswordReset = () => {
 
     // validation error
     const [emailValidateErr, setEmailValidateErr] = useState("");
+
+    // alert
+    const [showAlert, setShowAlert] = useState(false);
 
     const [loading, setLoading] = useState(false)
 
@@ -40,31 +45,16 @@ const PasswordReset = () => {
 
         setLoading(true);
 
-        const accessPasswordResetApi = async () => {
-            try {
-                const res = await authApi.sendResetLink({ email });
-                navigate("/admin/sended-reset-link")
-            } catch (err) {
-                setLoading(false);
+        try {
+            const res = await sendPasswordResetEmail(auth, email);
+            navigate("/admin/sended-reset-link")
+        } catch (err) {
+            setLoading(false);
 
-                console.log(err);
-
-                const errors = Array(err.data.errors);
-                
-                errors.forEach((error) => {
-                    if(error.email) {
-                        setEmailValidateErr(error.email[0]);
-                    }
-                })
+            if(err.code === "auth/user-not-found") {
+                setShowAlert(true);
             }
         }
-
-        // initialize csrf token and access passwordReset api
-        await authApi.initialCsrfToken().then((res) => {
-            accessPasswordResetApi();
-        }).catch((err) => {
-            console.log(err);
-        })
     }
 
     return (
@@ -84,6 +74,17 @@ const PasswordReset = () => {
                 error={emailValidateErr !== ""}
                 disabled={loading}
             />
+
+            <Box sx={{
+                    margin: "10px 0",
+                    display: showAlert ? "block" : "none"
+                }}
+            >
+                <Alert severity="error">
+                    <AlertTitle>メールアドレスが存在しません。</AlertTitle>
+                </Alert>
+            </Box>
+
             <LoadingButton
                 sx={{ mt: 3, mb: 2}} 
                 fullWidth type="submit" 

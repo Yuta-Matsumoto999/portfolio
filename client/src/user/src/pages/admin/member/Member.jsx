@@ -12,6 +12,7 @@ import TeamCreateMenu from '../../../components/admin/menu/TeamCreate';
 import AdminSearchApi from '../../../api/AdminSearchApi';
 import { teamSearch } from '../../../search/admin/TeamSearch';
 import { blue } from '@mui/material/colors';
+import authApi from '../../../api/AdminAuthApi';
 
 const Member = () => {
     const navigate = useNavigate();
@@ -38,10 +39,19 @@ const Member = () => {
                 setSortQueries(searchQueries[1]);
                 searchTeams(res, searchQueries[0], searchQueries[1]);
             } catch (err) {
-                console.log(err);
+                if(err.status === 401) {
+                    navigate('/admin/login');
+                }
             }
         }
-        getTeams();
+
+        const initialCsrfToken = async() => {
+            await authApi.initialCsrfToken().then(() => {
+                getTeams();
+            })
+        }
+
+        initialCsrfToken();
     },[]);
 
     const onDragEnd = (result) => {
@@ -69,14 +79,21 @@ const Member = () => {
         dispatch(setTeam(temp));
 
         // api call
-        try {
-            const res = await AdminTeamApi.reOrder({
-                teams: temp
-            })
-            console.log(res);
-        } catch (err) {
-            console.log(err);
+        const accessTeamReOrderApi = async () => {
+            try {
+                const res = await AdminTeamApi.reOrder({
+                    teams: temp
+                })
+            } catch (err) {
+                if(err.status === 401) {
+                    navigate('/admin/login');
+                }
+            }
         }
+
+        await authApi.initialCsrfToken().then(() => {
+            accessTeamReOrderApi();
+        })
     }
 
     const memberReOrder = async (list, startIndex, endIndex, startDroppableId, endDroppableId) => {
@@ -153,14 +170,22 @@ const Member = () => {
 
         // ----- api call ------
 
-        try {
-            const res = await AdminTeamApi.replaceMember({
-                users: temp,
-                teamId: endTeamId,
-            });
-        } catch (err) {
-            console.log(err);
+        const accessReplaceUserApi = async () => {
+            try {
+                const res = await AdminTeamApi.replaceMember({
+                    users: temp,
+                    teamId: endTeamId,
+                });
+            } catch (err) {
+                if(err.status === 401) {
+                    navigate('/admin/login');
+                }
+            }
         }
+
+        await authApi.initialCsrfToken().then(() => {
+            accessReplaceUserApi();
+        })
     }
 
     const searchTeams = (res, filterQueries, sortQueries, searchWord) => {

@@ -98,12 +98,13 @@ const Header = (props) => {
                 <IconButton onClick={handleSidebar} onMouseLeave={handleLeaveHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : onHover ? "flex" : "none" }} color="black"><BiChevronsRight size="20px"/></IconButton>
                 <Typography sx={{ display: {"xs" : sidebarVisible ? "none" : "block", "sm": "none"} }}>ここにlogo</Typography>
                 <Box sx={{ display: {"xs": "none", "sm": "flex"}, alignItems: "center" }}>
+                    <Typography fontSize="0.8rem" fontWeight="600" sx={{ marginRight: "20px" }}>{user.organization_name}</Typography>
                     <NotificationButton onClick={openNotificationList} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                         <FaBell color='gray' size="1.1rem"/>
                     </NotificationButton>
                     <NotificationMenu anchorEl={notificationAnchorEl} open={notificationOpen} onClose={closeNotificationMenuList} />
                     <Button onClick={openUserEditMenuList} color='gray' sx={{ display: {"xs": "none", "sm": "flex"} }}>
-                        <Avatar sx={{ height: "30px", width: "30px", marginRight: "5px" }} alt={user.name} src="" />
+                        <Avatar sx={{ height: "30px", width: "30px", marginRight: "5px" }} alt={user.name} src={user.iconUrl} />
                         <FaCaretDown />
                     </Button>
                     <UserMenu username={user.name} anchorEl={anchorEl} open={open} onClose={closeUserEditMenuList} logout={props.logout}/>

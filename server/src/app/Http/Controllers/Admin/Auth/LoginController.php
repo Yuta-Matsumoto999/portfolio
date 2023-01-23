@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\Admin;
+use App\Models\Organization;
 
 class LoginController extends Controller
 {
@@ -28,34 +29,31 @@ class LoginController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
 
+    private $admin;
+    private $organization;
+
+    public function __construct(Admin $admin, Organization $organization)
+    {
+        $this->admin = $admin;
+        $this->organization = $organization;
+    }
+
+    protected function credentials(Request $request)
+    {
+        return $request->only($this->username(), 'uid');
+    }
+
     public function login(LoginRequest $request)
     {
-        // validation check
-        $credentials = $request->all();
+        $admin = $this->admin->where('uid', $request->uid)->first();
 
-        // ユーザーの照合
-        if (Auth::guard('admins')->attempt($credentials)) {
+        if(Auth::guard('admins')->loginUsingId($admin->id)) {
             $request->session()->regenerate();
-    
-            return response()->json(Auth::guard('admins')->user());
-        } else {
-            $existsUser = Admin::where('email', $request->email)->first();
 
-            if($existsUser == null) {
-                $error = [
-                    'errors' => [
-                        'email' => ['メールアドレスが無効です。']
-                    ]
-                ];
-            } elseif($existsUser->password !== $request->password) {
-                $error = [
-                    'errors' => [
-                        'password' => ['パスワードが一致しません。']
-                    ]
-                ];
-            }
-            return response()->json($error, 401);
-        }
+            $organizationUniqueKey =  $admin->organization->organization_unique_key;
+
+            return response()->json([Auth::guard('admins')->user(), $organizationUniqueKey]);
+        };
     }
 
     public function logout(Request $request)
@@ -65,6 +63,38 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         return response()->json("success logout");
+    }
+
+    public function checkAuth(Request $request)
+    {
+        $admin= $this->admin->find(Auth::guard('admins')->user()->id);
+
+        $adminInfo = [
+            "id" => $admin->id,
+            "name" => $admin->name,
+            "iconUrl" => $admin->iconUrl,
+            "organizationId" => $admin->organization->id,
+            "organization_name" => $admin->organization->name,
+            "organization_unique_key" => $admin->organization->organization_unique_key
+        ];
+
+        return response()->json($adminInfo);
+    }
+
+    public function checkAuthOrganizationKey(Request $request)
+    {
+        $organizationUniqueKey = $request->organization_unique_key;
+        $adminId = Auth::guard('admins')->user()->id;
+
+        $organizationExists = $this->organization->whereIn('organizations.id', function($query) use ($adminId) {
+            $query->from('admins')
+                    ->select('admins.organization_id')
+                    ->where('id', $adminId);
+        })
+        ->where('organization_unique_key', $organizationUniqueKey)
+        ->exists();
+
+        return response()->json($organizationExists);
     }
 }
 

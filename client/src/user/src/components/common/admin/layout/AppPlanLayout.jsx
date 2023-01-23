@@ -6,18 +6,9 @@ import authApi from '../../../../api/AdminAuthApi';
 import useAdminAuth from '../../../../customHooks/useAdminAuth';
 import AdminAuthApi from '../../../../api/AdminAuthApi';
 
-const AuthLayout = () => {
+const AppPlanLayout = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const authenticate = useAdminAuth();
-
-    const logout = async () => {
-        await AdminAuthApi.logout();
-    }
-
-    if(authenticate === true) {
-        logout();
-    }
 
     return (
         <div>
@@ -45,33 +36,17 @@ const AuthLayout = () => {
                         zIndex: 100, 
                         padding: {"xs": "none", "lg": "8px"},
                         borderRadius: "10px", 
-                        display: "flex",
                         width: {"xs": "100%", "lg": "80%"},
                         minHeight: {"xs": "100%", "lg": "80%"}
             }}>
                 <Box sx={{ 
-                            backgroundColor: "#f4f4fc",
-                            width: {"xs": 0, "lg": "25%"},
-                            display: {"xs": "none", "lg": "block"},
-                            borderTopLeftRadius: "10px",
-                            position: "relative"
-                }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", flexDirection: "column", padding: "20px"}}>
-                        <img src='/logo-v2.png' width="150px" height="auto"></img>
-                        <Typography sx={{ fontWeight: 800, fontSize: "1.3rem", marginTop: "50px" }}>Evolve your competition with us</Typography>
-                    </Box>
-                    <Box sx={{position: "absolute", bottom: 0, width: "100%", display: "flex", flexDirection: "column", alignItems: "bottom"}}>
-                        <img src='/auth-image-v3.png' height="100%"></img>
-                    </Box>
-                </Box>
-                <Box sx={{ 
-                            width: {"xs": "100%", "lg": "75%"}, 
+                            width: "100%", 
                             padding: {"xs": "5px", "lg": "30px"}
                         }}>
                     <Box 
                         sx={{ 
                             display: "flex", 
-                            justifyContent:{"xs": "space-between", "lg": "end"}, 
+                            justifyContent: "space-between", 
                             alignItems: "center",
                             margin: {"xs": "20px 20px 0 20px", "lg": 0}
                         }}
@@ -101,23 +76,12 @@ const AuthLayout = () => {
                             </Button>
                         </Box>
                     </Box>
-                    <Container
-                        maxWidth="xs"
-                        sx={{ 
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            flexDirection: "column",
-                            height: "100%",
-                        }}
-                    >
-                        <Outlet />
-                    </Container>
                 </Box>
+                <Outlet />
             </Box>
         </Box>
     </div>
     )
 }
 
-export default AuthLayout
+export default AppPlanLayout

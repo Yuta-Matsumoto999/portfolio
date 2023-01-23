@@ -22,6 +22,9 @@ import ResetPasswordForm from './pages/user/auth/ResetPasswordForm';
 import CompleteResetPassword from './pages/user/auth/CompleteResetPassword';
 import Home from './pages/user/Home';
 import Member from './pages/admin/member/Member';
+import AppPlanLayout from './components/common/admin/layout/AppPlanLayout';
+import Plan from './pages/admin/Plan';
+import Organization from './pages/admin/Organization';
 
 function App() {
   const Theme = createTheme({
@@ -72,9 +75,15 @@ function App() {
             <Route path='/admin/reset-password-form' element={<AdminResetPasswordForm />} />
             <Route path='/admin/complete-reset-password' element={<AdminCompleteResetPassword />} />
           </Route>
-          <Route path="/admin" element={<AdminAppLayout />}>
+          <Route path="/admin/plan" element={<AppPlanLayout />}>
+            <Route index element={<Plan />} />
+          </Route>
+          <Route path="/admin/organization" element={<AppPlanLayout />}>
+            <Route index element={<Organization />} />
+          </Route>
+          <Route path="/admin/manage/:organizationUniqueKey" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />
-            <Route path="/admin/member" element={<Member />} />
+            <Route path="/admin/manage/:organizationUniqueKey/member" element={<Member />} />
           </Route>
 
         {/* General */}

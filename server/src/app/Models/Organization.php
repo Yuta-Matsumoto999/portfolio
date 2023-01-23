@@ -10,9 +10,14 @@ class Organization extends Model
     use HasFactory;
 
     protected $fillable = [
-        'organization_name',
-        'organization_unique_id'
+        'name',
+        'organization_unique_key'
     ];
+
+    public function plans()
+    {
+        return $this->belongsToMany(Plan::class);
+    }
 
     public function users()
     {

@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('plans', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('organization_id')->nullable()->constrained();
-            $table->foreignId('permission_id')->constrained();
             $table->string('name');
-            $table->string('uid', 1000);
-            $table->string('iconUrl', 1000)->nullable();
+            $table->string('description', 255);
+            $table->integer('amount')->nullable();
+            $table->integer('subscription')->nullable();
+            $table->integer('price')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('plans');
     }
 };
