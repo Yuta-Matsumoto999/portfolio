@@ -55,7 +55,7 @@ const Login = () => {
 
                 if(res) {
                     const organizationUniqueKey = res[1];
-                    navigate(`/admin/${organizationUniqueKey}`);
+                    navigate(`/admin/manage/${organizationUniqueKey}`);
                 }
             } catch (err) {
                 setLoading(false);

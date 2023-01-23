@@ -65,7 +65,7 @@ class LoginController extends Controller
         return response()->json("success logout");
     }
 
-    public function checkAuthAndRegenerateSession(Request $request)
+    public function checkAuth(Request $request)
     {
         $admin= $this->admin->find(Auth::guard('admins')->user()->id);
 
@@ -73,6 +73,7 @@ class LoginController extends Controller
             "id" => $admin->id,
             "name" => $admin->name,
             "iconUrl" => $admin->iconUrl,
+            "organizationId" => $admin->organization->id,
             "organization_name" => $admin->organization->name,
             "organization_unique_key" => $admin->organization->organization_unique_key
         ];

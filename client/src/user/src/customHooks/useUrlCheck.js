@@ -9,7 +9,7 @@ const useUrlCheck = async () => {
     useLayoutEffect(() => {
         const checkUrl =  async () => {
             const queryParams = window.location.pathname;
-            const organization_unique_key = queryParams.split("/")[2];
+            const organization_unique_key = queryParams.split("/")[3];
     
             try {
                 const checkUrl = await authApi.checkUrl({ organization_unique_key });
