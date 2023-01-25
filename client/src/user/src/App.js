@@ -25,6 +25,7 @@ import Member from './pages/admin/member/Member';
 import AppPlanLayout from './components/common/admin/layout/AppPlanLayout';
 import Plan from './pages/admin/Plan';
 import Organization from './pages/admin/Organization';
+import OrganizationSetting from './pages/admin/setting/organization/OrganizationSetting';
 
 function App() {
   const Theme = createTheme({
@@ -84,6 +85,7 @@ function App() {
           <Route path="/admin/manage/:organizationUniqueKey" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="/admin/manage/:organizationUniqueKey/member" element={<Member />} />
+            <Route path="/admin/manage/:organizationUniqueKey/settings/organization" element={<OrganizationSetting />} />
           </Route>
 
         {/* General */}

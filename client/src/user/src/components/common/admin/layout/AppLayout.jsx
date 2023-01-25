@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled, { useTheme } from 'styled-components';
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../Sidebar';
 import useAdminAuth from '../../../../customHooks/useAdminAuth';
@@ -9,12 +9,13 @@ import authApi from '../../../../api/AdminAuthApi';
 import { useDispatch, useSelector } from "react-redux";
 import { compose } from '@mui/system';
 import useUrlCheck from '../../../../customHooks/useUrlCheck';
+import OrganizationNotFound from '../OrganizationNotFound';
+import NotFoundHeader from '../NotFoundHeader';
 
 const AppLayout = () => {
     const navigate = useNavigate();
-    const location = useLocation();
     const authenticate = useAdminAuth();
-    const checkUrl = useUrlCheck();
+    const urlCheck = useUrlCheck();
     const sidebarVisible = useSelector((state) => state.sidebar.value)
 
     if(authenticate === false) {
@@ -34,15 +35,24 @@ const AppLayout = () => {
 
     return (
         <div>
-            <Box sx={{ display: "flex" }}>
-                <Sidebar logout={logout} />
-                <Box sx ={{ flexGrow: 1, width: sidebarVisible ? `calc(100% - ${drawerWidth}px)` : "max-content" , backgroundColor: "#fff", minHeight: "100vh", height: "100%", marginLeft: sidebarVisible ? 0 : `-${drawerWidth}px` }}>
-                    <Header logout={logout}/>
-                    <Box>
-                        <Outlet />
+            {urlCheck === true &&
+                <Box sx={{ display: "flex" }}>
+                    <Sidebar logout={logout} />
+                    <Box sx ={{ flexGrow: 1, width: sidebarVisible ? `calc(100% - ${drawerWidth}px)` : "max-content" , backgroundColor: "#fff", minHeight: "100vh", height: "100%", marginLeft: sidebarVisible ? 0 : `-${drawerWidth}px` }}>
+                        <Header logout={logout}/>
+                        <Box>
+                            <Outlet />
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
+            }
+
+            {urlCheck === false &&
+                <Box>
+                    <NotFoundHeader logout={logout}/>
+                    <OrganizationNotFound />
+                </Box>
+            }
         </div>
     )
 }
