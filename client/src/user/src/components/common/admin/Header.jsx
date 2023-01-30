@@ -93,7 +93,7 @@ const Header = (props) => {
 
     return (
         <div>
-            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: sidebarVisible ? "end" : "space-between", padding: {"xs": "16px", "sm": "0 20px"}, height: {"xs": "60px", "sm": "40px"}, borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
+            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: sidebarVisible ? "end" : "space-between", padding: {"xs": "16px", "sm": "0 20px"}, height: {"xs": "60px", "sm": "60px"}, borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
                 <IconButton onClick={handleSidebar} onMouseEnter={handelOnHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : !onHover ? "flex" : "none" }} color="black"><BiMenu size="20px"/></IconButton>
                 <IconButton onClick={handleSidebar} onMouseLeave={handleLeaveHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : onHover ? "flex" : "none" }} color="black"><BiChevronsRight size="20px"/></IconButton>
                 <Typography sx={{ display: {"xs" : sidebarVisible ? "none" : "block", "sm": "none"} }}>ここにlogo</Typography>
