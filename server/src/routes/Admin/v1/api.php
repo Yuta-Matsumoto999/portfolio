@@ -1,13 +1,16 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Auth\LoginController;
 use App\Http\Controllers\Admin\Auth\RegisterController;
 use App\Http\Controllers\Admin\Auth\ForgotPasswordController;
 use App\Http\Controllers\Admin\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\Admin\PlanController;
 use App\Http\Controllers\Admin\SearchController;
 use App\Http\Controllers\Admin\TeamController;
+use App\Models\Organization;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -29,6 +32,7 @@ Route::post("register", [RegisterController::class, "register"]);
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post("reset-password", [ResetPasswordController::class, 'resetPassword']);
 Route::post('logout', [LoginController::class, 'logout']);
+Route::post("sendCompletePasswordResetEmail", [ResetPasswordController::class, "sendCompletePasswordResetEmail"]);
 
 
 // auth middleware group
@@ -83,6 +87,12 @@ Route::middleware(['auth:admins'])->group(function () {
     // organization setting
     Route::prefix('organization')->group(function () {
         Route::post("create", [OrganizationController::class, "create"]);
+        Route::post("invitation/updateOrCreate", [InvitationController::class, "updateOrCreate"]);
+        Route::post("disable/invitation/link", [InvitationController::class, "disableInvitationLink"]);
+    });
+
+    Route::prefix('admin')->group(function () {
+        Route::post("admins", [AdminController::class, "getAdmins"]);
     });
 
 });

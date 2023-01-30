@@ -96,7 +96,7 @@ const Login = () => {
 
     return (
         <>
-        <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign In</Typography>
+        <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign In</Typography>
         <Box component="form" onSubmit={login} noValidate>
             <TextField 
                 fullWidth 

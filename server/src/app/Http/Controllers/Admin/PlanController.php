@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\Auth\RegisteredNotificationJobs;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\Plan;
 use App\models\Organization;
+use App\Notifications\Api\Auth\RegisteredNotification;
 
 class PlanController extends Controller
 {
@@ -40,6 +42,8 @@ class PlanController extends Controller
         $organizationUniqueKey = $organization->organization_unique_key;
 
         $organization->plans()->attach($planId);
+
+        RegisteredNotificationJobs::dispatch();
 
         return response()->json($organizationUniqueKey);
     }

@@ -66,7 +66,7 @@ const SidebarItem = (props) => {
     return (
         <>
             {props.item.mobileOnly === false &&
-                <CustomListItemButton key={props.item.id} sx={{ backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined , position: "relative", borderLeft: path === props.item.judgementActive ? "4px solid #6E6EF8" :"none" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
+                <CustomListItemButton sx={{ backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined , position: "relative", borderLeft: path === props.item.judgementActive ? "4px solid #6E6EF8" :"none" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
                     <Icon>
                         {props.item.icon}
                     </Icon>
@@ -77,7 +77,7 @@ const SidebarItem = (props) => {
                 </CustomListItemButton>
             }
             {props.item.mobileOnly === true &&
-                <CustomListItemButtonMobileOnly key={props.item.id} sx={{ display: {"xs": "flex", "sm": "none"}, backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined, position: "relative" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
+                <CustomListItemButtonMobileOnly sx={{ display: {"xs": "flex", "sm": "none"}, backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined, position: "relative" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
                     {props.item.type === "auth" &&
                         <>
                             <Avatar sx={{ height: {"xs": "2.8vh", "sm": "3vh"}, width: {"xs": "2.8vh", "sm": "3vh"} }} alt={user.name} src="" />
@@ -94,7 +94,7 @@ const SidebarItem = (props) => {
                     <Box sx={{ backgroundColor: "#44448c", position: "relative" }}>
                         {props.item.child.map((subMenu, index) => {
                             return (
-                                <SidebarSubMenuItem subMenu={subMenu} handleSubMenuItem={handleSubMenuItem} path={path} index={index}/>
+                                <SidebarSubMenuItem subMenu={subMenu} handleSubMenuItem={handleSubMenuItem} path={path} key={subMenu.id} />
                             )
                         })}
                     </Box>

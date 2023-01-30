@@ -2,12 +2,14 @@
 
 namespace App\Jobs\Auth;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use App\Models\Admin;
 
 class RegisteredNotificationJobs implements ShouldQueue
 {
@@ -19,19 +21,9 @@ class RegisteredNotificationJobs implements ShouldQueue
      * @return void
      */
 
-    public $model;
-    public $user_name;
-    public $user_email;
-    public $user_password;
-    public $user_organization_name;
-
-    public function __construct($model, $user_name, $user_email, $user_password, $user_organization_name)
+    public function __construct()
     {
-        $this->model = $model;
-        $this->user_name = $user_name;
-        $this->user_email = $user_email;
-        $this->user_password = $user_password;
-        $this->user_organization_name = $user_organization_name;
+        //
     }
 
     /**
@@ -41,6 +33,11 @@ class RegisteredNotificationJobs implements ShouldQueue
      */
     public function handle()
     {
-        $this->model->sendRegisteredNotification($this->user_name, $this->user_email, $this->user_password, $this->user_organization_name);
+        $adminId = Auth::guard('admins')->user()->id;
+
+        $admin = Admin::find($adminId);
+        $user_name = $admin->name;
+
+        $admin->sendRegisteredNotification($user_name);
     }
 }

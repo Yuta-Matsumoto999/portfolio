@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 const CompleteResetPassword = () => {
     return (
         <>
-        <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Complete Update Password</Typography>
+        <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Complete Update Password</Typography>
         <Alert severity="success">
             <AlertTitle>パスワードの再設定が完了しました！</AlertTitle>
             新しく設定したパスワードでログインしてください。

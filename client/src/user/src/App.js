@@ -25,6 +25,8 @@ import Member from './pages/admin/member/Member';
 import AppPlanLayout from './components/common/admin/layout/AppPlanLayout';
 import Plan from './pages/admin/Plan';
 import Organization from './pages/admin/Organization';
+import AdministratorSetting from './pages/admin/setting/administrator/AdministratorSetting';
+import InvitationRegister from './pages/admin/auth/InvitationRegister';
 
 function App() {
   const Theme = createTheme({
@@ -66,7 +68,10 @@ function App() {
       <CssBaseline />
       <BrowserRouter>
         <Routes>
+
           {/* admin */}
+
+          {/* 認証 */}
           <Route path="/admin" element={<AdminAuthLayout />}>
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin/register" element={<AdminRegister />} />
@@ -75,18 +80,33 @@ function App() {
             <Route path='/admin/reset-password-form' element={<AdminResetPasswordForm />} />
             <Route path='/admin/complete-reset-password' element={<AdminCompleteResetPassword />} />
           </Route>
+
+          {/* チーム招待者 */}
+          <Route path="/admin/invitation/:organizationUniqueKey" element={<AdminAuthLayout />}>
+            <Route index element={<InvitationRegister />} />
+          </Route>
+
+
+          {/* 料金プラン選択 */}
           <Route path="/admin/plan" element={<AppPlanLayout />}>
             <Route index element={<Plan />} />
           </Route>
+
+          {/* 組織名設定 */}
           <Route path="/admin/organization" element={<AppPlanLayout />}>
             <Route index element={<Organization />} />
           </Route>
+
+          {/* 認証後 */}
           <Route path="/admin/manage/:organizationUniqueKey" element={<AdminAppLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="/admin/manage/:organizationUniqueKey/member" element={<Member />} />
+            <Route path="/admin/manage/:organizationUniqueKey/settings/administrator" element={<AdministratorSetting />} />
           </Route>
 
+
         {/* General */}
+
           <Route path="/" element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

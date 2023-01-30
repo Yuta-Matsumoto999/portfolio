@@ -19,14 +19,10 @@ class CompletePasswordResetNotificationJobs implements ShouldQueue
      * @return void
      */
     public $model;
-    public $user_email;
-    public $user_password;
     
-    public function __construct($model, $user_email, $user_password)
+    public function __construct($model)
     {
         $this->model = $model;
-        $this->user_email = $user_email;
-        $this->user_password = $user_password;
     }
 
     /**
@@ -36,6 +32,6 @@ class CompletePasswordResetNotificationJobs implements ShouldQueue
      */
     public function handle()
     {
-        $this->model->sendCompletePasswordResetNotification($this->model->name, $this->user_email, $this->user_password);
+        $this->model->sendCompletePasswordResetNotification($this->model->name);
     }
 }

@@ -72,6 +72,7 @@ class LoginController extends Controller
         $adminInfo = [
             "id" => $admin->id,
             "name" => $admin->name,
+            "email" => $admin->email,
             "iconUrl" => $admin->iconUrl,
             "organizationId" => $admin->organization->id,
             "organization_name" => $admin->organization->name,

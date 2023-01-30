@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Support\Facades\Password;
@@ -42,5 +43,12 @@ class ResetPasswordController extends Controller
         return $status == Password::PASSWORD_RESET
                 ? response()->json(['message' => 'パスワードの再設定が完了しました。', 'status' => true], 201)
                 : response()->json(['message' => 'パスワードの再設定に失敗しました。', 'status' => false], 401);
+    }
+
+    public function sendCompletePasswordResetEmail(Request $request)
+    {
+        $model = $this->admin->where('email', $request->email)->first();
+
+        CompletePasswordResetNotificationJobs::dispatch($model);
     }
 }

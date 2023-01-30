@@ -24,6 +24,7 @@ class Admin extends Authenticatable
         'organization_id',
         'permission_id',
         'name',
+        'email',
         'uid',
         'iconUrl'
     ];
@@ -34,8 +35,7 @@ class Admin extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'uid'
     ];
 
     /**
@@ -77,13 +77,13 @@ class Admin extends Authenticatable
         $this->notify(new ResetPasswordNotification($token));
     }
 
-    public function sendRegisteredNotification($user_name, $user_email, $user_password, $user_organization_name)
+    public function sendRegisteredNotification($user_name)
     {
-        return $this->notify(new RegisteredNotification($user_name, $user_email, $user_password, $user_organization_name));
+        return $this->notify(new RegisteredNotification($user_name));
     }
     
-    public function sendCompletePasswordResetNotification($user_name, $user_email, $user_password)
+    public function sendCompletePasswordResetNotification($user_name)
     {
-        return $this->notify(new CompletePasswordResetNotification($user_name, $user_email, $user_password));
+        return $this->notify(new CompletePasswordResetNotification($user_name));
     }
 }

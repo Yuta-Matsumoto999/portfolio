@@ -5,11 +5,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import authApi from '../../../api/AdminAuthApi';
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { IconContext } from 'react-icons';
 import { auth, provider } from "../../../firebase";
 import AdminAuthApi from '../../../api/AdminAuthApi';
-import { async } from '@firebase/util';
+import { FaFacebookSquare, FaTwitterSquare, FaLine, FaGoogle } from "react-icons/fa";
 
-const Register = () => {
+const InvitationRegister = () => {
     const navigate = useNavigate();
 
     // input 
@@ -270,6 +271,39 @@ const Register = () => {
                 Sign Up
             </LoadingButton>
         </Box>
+        <Box>
+            <Typography 
+                sx={{
+                    fontWeight: 800,
+                    margin: "10px 0",
+                    textAlign: "center"
+                }}
+            >
+                or
+            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-around"
+                }}
+            >
+                <Button>
+                    <IconContext.Provider value={{ color: "#4267B2", size: "40px" }}>
+                        <FaFacebookSquare />
+                    </IconContext.Provider> 
+                </Button>
+                <Button>
+                    <IconContext.Provider value={{ color: "#1DA1F2", size: "40px" }}>
+                        <FaTwitterSquare />
+                    </IconContext.Provider> 
+                </Button>
+                <Button>
+                    <IconContext.Provider value={{ color: "#DB4437", size: "40px" }}>
+                        <FaGoogle/>
+                    </IconContext.Provider> 
+                </Button>
+            </Box>
+        </Box>
         <Button component={Link} to="/admin/login" sx={{ marginTop: "15px"}}>
             <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントをお持ちですか？</Typography>
             <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>ログイン</Typography>
@@ -278,4 +312,4 @@ const Register = () => {
     )
 }
 
-export default Register
+export default InvitationRegister

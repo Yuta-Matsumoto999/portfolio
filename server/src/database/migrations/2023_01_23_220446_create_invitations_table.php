@@ -13,14 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('invitations', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->foreignId('organization_id')->nullable()->constrained();
-            $table->foreignId('permission_id')->constrained();
-            $table->string('name');
-            $table->string('email');
-            $table->string('uid', 1000);
-            $table->string('iconUrl', 1000)->nullable();
+            $table->foreignId('organization_id')->constrained();
+            $table->string('admin_invitation_key')->nullable();
+            $table->string('user_invitation_key')->nullable();
             $table->timestamps();
         });
     }
@@ -32,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('invitations');
     }
 };

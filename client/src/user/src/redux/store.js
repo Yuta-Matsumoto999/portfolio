@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { useReducer } from "react";
+import administratorReducer from "./features/administratorSlice";
 import adminReducer from "./features/adminSlice";
 import generalReducer from "./features/generalSlice";
 import planReducer from "./features/planSlice";
@@ -14,6 +14,7 @@ export const store = configureStore({
         sidebar: sidebarReducer,
         team: teamReducer,
         teamUser: teamUserReducer,
-        plan: planReducer
+        plan: planReducer,
+        administrator: administratorReducer
     }
 });

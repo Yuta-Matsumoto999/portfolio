@@ -59,7 +59,7 @@ const PasswordReset = () => {
 
     return (
         <>
-        <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Password Reset</Typography>
+        <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Password Reset</Typography>
         <Typography sx={{ fontSize: "0.9rem" }}>パスワードをお忘れの場合は設定したメールアドレスを入力してください。<br />パスワード再設定用のリンクをメールアドレスへお送りします。</Typography>
         <Box component="form" onSubmit={handlePasswordReset} noValidate sx={{ marginTop: "20px"}}>
             <TextField 
