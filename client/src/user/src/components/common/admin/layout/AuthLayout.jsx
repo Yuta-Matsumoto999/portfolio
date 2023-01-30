@@ -105,7 +105,7 @@ const AuthLayout = () => {
                         maxWidth="xs"
                         sx={{ 
                             display: "flex",
-                            justifyContent: "center",
+                            justifyContent: {"xs": "normal", "sm": "center"},
                             alignItems: "center",
                             flexDirection: "column",
                             height: "100%",
