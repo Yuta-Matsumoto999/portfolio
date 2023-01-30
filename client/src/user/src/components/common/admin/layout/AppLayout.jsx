@@ -38,7 +38,7 @@ const AppLayout = () => {
             {urlCheck === true &&
                 <Box sx={{ display: "flex" }}>
                     <Sidebar logout={logout} />
-                    <Box sx ={{ flexGrow: 1, width: sidebarVisible ? `calc(100% - ${drawerWidth}px)` : "max-content" , backgroundColor: "#fff", minHeight: "100vh", height: "100%", marginLeft: sidebarVisible ? 0 : `-${drawerWidth}px` }}>
+                    <Box sx ={{ flexGrow: 1, width: "max-content" , backgroundColor: "#eff0f3", minHeight: "100vh", height: "100%" }}>
                         <Header logout={logout}/>
                         <Box>
                             <Outlet />
