@@ -34,6 +34,7 @@ const Sidebar = (props) => {
 
     const menuItems = [
         {
+            "id": 1,
             "name": "Dashboard",
             "path": `/admin/manage/${user.organization_unique_key}`,
             "judgementActive": undefined,
@@ -42,6 +43,7 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 2,
             "name": "Schedule",
             "path": `/admin/manage/${user.organization_unique_key}/schedule`,
             "judgementActive": "schedule",
@@ -49,6 +51,7 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 3,
             "name": "Member",
             "path": `/admin/manage/${user.organization_unique_key}/member`,
             "judgementActive": "member",
@@ -56,6 +59,7 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 4,
             "name": "Game",
             "path": `/admin/manage/${user.organization_unique_key}/game`,
             "judgementActive": "game",
@@ -63,6 +67,7 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 5,
             "name": "Training",
             "path": `/admin/manage/${user.organization_unique_key}/training`,
             "judgementActive": "training",
@@ -70,6 +75,7 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 6,
             "name": "Chat",
             "path": `/admin/manage/${user.organization_unique_key}/chat`,
             "judgementActive": "chat",
@@ -77,37 +83,39 @@ const Sidebar = (props) => {
             "mobileOnly": false
         },
         {
+            "id": 7,
             "name": "Settings",
             "path": null,
             "judgementActive": "settings",
             "icon": <BiCog />,
             "child": [
                 {
-                    "name": "Organization",
-                    "path": `/admin/manage/${user.organization_unique_key}/settings/organization`,
+                    "id": 1,
+                    "name": "Administrator",
+                    "path": `/admin/manage/${user.organization_unique_key}/settings/administrator`,
                 },
                 {
-                    "name": "Permission",
-                    "path": `/admin/manage/${user.organization_unique_key}/setting/permission`,
+                    "id": 2,
+                    "name": "Billing",
+                    "path": `/admin/manage/${user.organization_unique_key}/setting/billing`,
                 },
-                {
-                    "name": "Role",
-                    "path": `/admin/manage/${user.organization_unique_key}/setting/role`,
-                }
             ],
             "mobileOnly": false
         },
         {
+            "id": 8,
             "name": "User setting",
             "path": null,
             "judgementActive": "user",
             "icon": null,
             "child": [
                 {
+                    "id": 1,
                     "name": "Your profile",
                     "path": `/admin/manage/${user.organization_unique_key}/profile`,
                 },
                 {
+                    "id": 2,
                     "name": "Edit Password",
                     "path": `/admin/manage/${user.organization_unique_key}/password`,
                 }
@@ -118,6 +126,10 @@ const Sidebar = (props) => {
     ];
 
     const drawerWidth = 240;
+    
+    const closeSideBar = () => {
+        dispatch(setSidebar(false));
+    }
 
     return (
         <Drawer
@@ -129,10 +141,11 @@ const Sidebar = (props) => {
                     background: "#34346c"
                 }, 
             }}
-            variant="persistent"
+            variant="temporary"
             transitionDuration={200}
             anchor="left"
             open={sidebarVisible}
+            onClose={closeSideBar}
         >
             <Box sx={{ padding: "0 10px" }}>
                 <Box sx={{ display: "flex", justifyContent: "end", alignItems: "center" }}>
@@ -146,7 +159,7 @@ const Sidebar = (props) => {
             <Box sx={{ color: "#fff", marginTop: "20px" }}>
                 {menuItems.map((item, index) => {
                     return (
-                        <SidebarItem item={item} icon={Icon} width={width}/> 
+                        <SidebarItem item={item} icon={Icon} width={width} key={item.id}/> 
                     )
                 })}
             </Box>
