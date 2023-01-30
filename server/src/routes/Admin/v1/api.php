@@ -32,6 +32,7 @@ Route::post("register", [RegisterController::class, "register"]);
 Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post("reset-password", [ResetPasswordController::class, 'resetPassword']);
 Route::post('logout', [LoginController::class, 'logout']);
+Route::post("sendCompletePasswordResetEmail", [ResetPasswordController::class, "sendCompletePasswordResetEmail"]);
 
 
 // auth middleware group

@@ -41,6 +41,6 @@ class RegisteredNotificationJobs implements ShouldQueue
      */
     public function handle()
     {
-        $this->model->sendRegisteredNotification($this->user_name, $this->user_email, $this->user_password, $this->user_organization_name);
+        $this->model->sendRegisteredNotification($this->user_name, $this->user_email, $this->user_organization_name);
     }
 }

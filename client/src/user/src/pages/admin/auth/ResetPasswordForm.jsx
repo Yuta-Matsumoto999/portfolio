@@ -3,7 +3,7 @@ import { Box, Button, createChainedFunction, TextField, Typography, Alert, Alert
 import { LoadingButton } from "@mui/lab";
 import { Link, useNavigate, useLocation, useAsyncError  } from "react-router-dom";
 import { useState } from 'react';
-import authApi from '../../../api/AdminAuthApi';
+import AdminAuthApi from '../../../api/AdminAuthApi';
 import { auth } from '../../../firebase';
 import { verifyPasswordResetCode, confirmPasswordReset } from 'firebase/auth';
 
@@ -94,26 +94,44 @@ const PasswordReset = () => {
 
         if(actionCode === '') return
 
-        try {
-            await verifyPasswordResetCode(auth, actionCode).then(() => {
-                confirmPasswordReset(auth, actionCode, password).then(() => {
-                    navigate("/admin/complete-reset-password");
-                })
-            })
-        } catch (err) {
-            console.log(err.code);
-
-            setLoading(false);
-
-            if(err.code === "auth/invalid-action-code") {
-                setShowAlert(true);
+        const confirmPassword = async (value) => {
+            try {
+                await confirmPasswordReset(auth, actionCode, password);
+                navigate("/admin/complete-reset-password");
+                initialCsrfToken(value);
+            } catch (err) {
+                console.log(err.code);
+    
+                setLoading(false);
+    
+                if(err.code === "auth/invalid-action-code") {
+                    setShowAlert(true);
+                }
             }
+        }
+
+        const sendResetCompleteEmail = async (email) => {
+            try {
+                await AdminAuthApi.sendCompletePasswordResetEmail({ email });
+            } catch(err) {
+                console.log(err);
+            }
+        }
+
+        await verifyPasswordResetCode(auth, actionCode).then((value) => {
+            confirmPassword(value);
+        })
+
+        const initialCsrfToken = async (value) => {
+            await AdminAuthApi.initialCsrfToken().then((res) => {
+                sendResetCompleteEmail(value);
+            });
         }
     }
 
     return (
         <>
-        <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Password Update</Typography>
+        <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Password Update</Typography>
         <Typography sx={{ fontSize: "0.9rem" }}>パスワードの再設定を行なってください。</Typography>
         <Box component="form" onSubmit={handleResetPassword} noValidate sx={{ marginTop: "20px"}}>
             <TextField 

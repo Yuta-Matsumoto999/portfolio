@@ -19,13 +19,10 @@ class CompletePasswordResetNotification extends Notification
 
     public $user_name;
     public $user_email;
-    public $user_password;
 
-    public function __construct($user_name, $user_email, $user_password)
+    public function __construct($user_name)
     {
         $this->user_name = $user_name;
-        $this->user_email = $user_email;
-        $this->user_password = $user_password;
     }
 
     /**
@@ -50,9 +47,7 @@ class CompletePasswordResetNotification extends Notification
         return (new MailMessage)
                     ->subject("パスワード再設定完了")
                     ->markdown("email.Auth.completePasswordReset", [
-                        "user_name" => $this->user_name,
-                        "user_email" => $this->user_email,
-                        "user_password" => $this->user_password
+                        "user_name" => $this->user_name
                     ]);
     }
 

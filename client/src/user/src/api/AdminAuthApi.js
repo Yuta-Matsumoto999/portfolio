@@ -10,6 +10,7 @@ const AdminAuthApi = {
     resetPassword: (params) => axiosClient.post("api/admin/v1/reset-password", params),
     checkUrl: (params) => axiosClient.post('/api/admin/v1/authenticate-organizationKey-check', params),
     getAdmins: () => axiosClient.post("/api/admin/v1/admin/admins"),
+    sendCompletePasswordResetEmail: (params) => axiosClient.post("api/admin/v1/sendCompletePasswordResetEmail", params)
 }
 
 export default AdminAuthApi;
