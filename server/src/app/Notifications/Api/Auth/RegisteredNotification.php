@@ -18,16 +18,10 @@ class RegisteredNotification extends Notification
      */
 
     public $user_name;
-    public $user_email;
-    public $user_password;
-    public $user_organization_name;
 
-    public function __construct($user_name, $user_email, $user_password, $user_organization_name)
+    public function __construct($user_name)
     {
         $this->user_name = $user_name;
-        $this->user_email = $user_email;
-        $this->user_password = $user_password;
-        $this->user_organization_name = $user_organization_name;
     }
 
     /**
@@ -51,11 +45,8 @@ class RegisteredNotification extends Notification
     {
         return (new MailMessage)
                     ->subject("会員登録完了")
-                    ->markdown('email.Auth.register',[
+                    ->markdown('email.Auth.register', [
                         'user_name' => $this->user_name,
-                        'user_email' => $this->user_email,
-                        'user_password' => $this->user_password,
-                        'user_organization_name' => $this->user_organization_name
                     ]);
     }
 
