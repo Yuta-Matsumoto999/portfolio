@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('organization_id')->nullable()->constrained();
             $table->foreignId('permission_id')->constrained();
             $table->string('name');
+            $table->string('email');
             $table->string('uid', 1000);
             $table->string('iconUrl', 1000)->nullable();
             $table->timestamps();

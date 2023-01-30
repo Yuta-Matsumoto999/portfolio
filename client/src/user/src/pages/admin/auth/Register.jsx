@@ -158,7 +158,7 @@ const Register = () => {
 
         const accessRegisterApi = async (uid) => {
             try {
-                const res = await AdminAuthApi.register({ name, uid });
+                const res = await AdminAuthApi.register({ name, email, uid });
 
                 if(res) {
                     navigate("/admin/organization");
@@ -175,7 +175,7 @@ const Register = () => {
             const uid = res.user.uid;
 
             await authApi.initialCsrfToken().then((res) => {
-                accessRegisterApi(uid);
+                accessRegisterApi(uid, email);
             });
         } catch (err) {
             setLoading(false);
@@ -196,7 +196,7 @@ const Register = () => {
 
     return (
         <>
-        <Typography sx={{ marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign Up</Typography>
+        <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign Up</Typography>
         <Box component="form" onSubmit={register} noValidate>
             <TextField 
                 fullWidth
@@ -269,11 +269,11 @@ const Register = () => {
                 >
                 Sign Up
             </LoadingButton>
-            </Box>
-            <Button component={Link} to="/admin/login" sx={{ marginTop: "15px"}}>
-                <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントをお持ちですか？</Typography>
-                <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>ログイン</Typography>
-            </Button>
+        </Box>
+        <Button component={Link} to="/admin/login" sx={{ marginTop: "15px"}}>
+            <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントをお持ちですか？</Typography>
+            <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>ログイン</Typography>
+        </Button>
         </>
     )
 }

@@ -27,6 +27,7 @@ class RegisterController extends Controller
     {
         $newAdmin = [
             'name' => $request->name,
+            'email' => $request->email,
             'uid' => $request->uid,
             'permission_id' => 1
         ];

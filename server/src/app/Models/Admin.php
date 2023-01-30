@@ -24,6 +24,7 @@ class Admin extends Authenticatable
         'organization_id',
         'permission_id',
         'name',
+        'email',
         'uid',
         'iconUrl'
     ];
@@ -34,8 +35,7 @@ class Admin extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'uid'
     ];
 
     /**
