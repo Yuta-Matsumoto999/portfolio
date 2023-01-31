@@ -80,7 +80,7 @@ const SidebarItem = (props) => {
                 <CustomListItemButtonMobileOnly sx={{ display: {"xs": "flex", "sm": "none"}, backgroundColor: path === props.item.judgementActive ? "#44448c" : undefined, opacity: path === props.item.judgementActive ? 1 : undefined, position: "relative" }} component={props.item.path ? Link : undefined} to={props.item.path} data-path={props.item.path} onClick={props.item.child ? handleSidebarItem : handleSubMenuItem}>
                     {props.item.type === "auth" &&
                         <>
-                            <Avatar sx={{ height: {"xs": "2.8vh", "sm": "3vh"}, width: {"xs": "2.8vh", "sm": "3vh"} }} alt={user.name} src="" />
+                            <Avatar sx={{ height: 22, width: 22  }} alt={user.name} src={user.iconUrl} />
                             <Typography fontWeight="600" fontSize="1rem" sx={{ marginLeft: "10px", display: {'xs': "block", 'sm': 'none', 'md': "block"} }}>
                                 {user.name}
                             </Typography>

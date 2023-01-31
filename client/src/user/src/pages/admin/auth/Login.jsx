@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { Box, Button, TextField, Typography, Alert, AlertTitle } from '@mui/material';
+import { makeStyles } from "@mui/material/styles";
+import { Box, Button, TextField, Typography, Alert, AlertTitle, Avatar } from '@mui/material';
 import { LoadingButton } from "@mui/lab";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
@@ -7,7 +8,17 @@ import authApi from '../../../api/AdminAuthApi';
 import { FaFacebookSquare, FaTwitterSquare, FaLine, FaGoogle } from "react-icons/fa";
 import { IconContext } from 'react-icons';
 import { auth, provider } from "../../../firebase";
-import { signInWithEmailAndPassword, signInWithRedirect } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, getRedirectResult } from 'firebase/auth';
+import styled from 'styled-components';
+
+const GoogleButton = styled.button`
+    background-color: #4285f4;
+    width: 100%;
+    border: 1px solid #4285f4;
+    padding: 0;
+    border-radius: 5px;
+    cursor:pointer;
+`
 
 const Login = () => {
     const navigate = useNavigate();
@@ -94,6 +105,39 @@ const Login = () => {
         }
     }
 
+    // social login 用
+    const accessLoginApi = async (name, email, uid, iconUrl) => {
+        try {
+            const res = await authApi.login({ name, email, uid, iconUrl });
+
+            // 既に登録済みの場合
+            if(res[1] !== undefined) {
+                const organizationUniqueKey = res[1];
+                navigate(`/admin/manage/${organizationUniqueKey}`);
+            } else {
+                // 未登録の場合
+                navigate("/admin/organization");
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    //Google認証
+    const loginWithGoogle = async () => {
+        try {
+            const res = await signInWithPopup(auth, provider);
+
+            console.log(res);
+
+            await authApi.initialCsrfToken().then(() => {
+                accessLoginApi(res.user.displayName, res.user.email, res.user.uid, res.user.photoURL);
+            });
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     return (
         <>
         <Typography sx={{ marginTop: {"xs": "40px", "sm": 0}, marginBottom: "20px", fontWeight: "800", fontSize: "1.4rem" }}>Sign In</Typography>
@@ -135,7 +179,7 @@ const Login = () => {
             </Box>
 
             <LoadingButton
-                sx={{ mt: 3, mb: 2}} 
+                sx={{ mt: 3, mb: 2, padding: "10px 16px" }} 
                 fullWidth type="submit" 
                 loading={loading}
                 color="success"
@@ -149,43 +193,59 @@ const Login = () => {
                 </Button>
             </Box>
         </Box>
-            <Box>
-                <Typography 
-                    sx={{
-                        fontWeight: 800,
-                        margin: "10px 0",
-                        textAlign: "center"
-                    }}
+        <Box>
+            <Typography 
+                sx={{
+                    fontWeight: 800,
+                    margin: "10px 0",
+                    textAlign: "center"
+                }}
+            >
+                or
+            </Typography>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "space-around"
+                }}
+            >
+                <GoogleButton
+                    type='button'
+                    onClick={loginWithGoogle}
                 >
-                    or
-                </Typography>
-                <Box
-                    sx={{
-                        display: "flex",
-                        justifyContent: "space-around"
-                    }}
-                >
-                    <Button>
-                        <IconContext.Provider value={{ color: "#4267B2", size: "40px" }}>
-                            <FaFacebookSquare />
-                        </IconContext.Provider> 
-                    </Button>
-                    <Button>
-                        <IconContext.Provider value={{ color: "#1DA1F2", size: "40px" }}>
-                            <FaTwitterSquare />
-                        </IconContext.Provider> 
-                    </Button>
-                    <Button>
-                        <IconContext.Provider value={{ color: "#DB4437", size: "40px" }}>
-                            <FaGoogle/>
-                        </IconContext.Provider> 
-                    </Button>
-                </Box>
-                <Button component={Link} to="/admin/register" sx={{ marginTop: "15px"}}>
-                    <Typography sx={{ color: "black",  fontSize: "0.9rem"}}>アカウントを持っていませんか？</Typography>
-                    <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>新規作成</Typography>
-                </Button>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                padding: "8px",
+                                backgroundColor: "#fff",
+                                borderRadius: "5px"
+                            }}
+                        >
+                            <img src='https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg' />
+                        </Box>
+                        <Typography
+                            sx={{
+                                flexGrow: 1,
+                                color: "#fff"
+                            }}
+                            fontWeight="800"
+                        >
+                            Googleでログイン
+                        </Typography>
+                    </Box>
+
+                </GoogleButton>
             </Box>
+            <Button component={Link} to="/admin/register" sx={{ marginTop: "25px"}}>
+                <Typography sx={{ color: "#000000",  fontSize: "0.9rem", fontWeight: 400}}>アカウントを持っていませんか？</Typography>
+                <Typography sx={{ color: "#6c3cb4", fontSize: "0.9rem", fontWeight: "600" }}>新規作成</Typography>
+            </Button>
+        </Box>
         </>
     )
 }

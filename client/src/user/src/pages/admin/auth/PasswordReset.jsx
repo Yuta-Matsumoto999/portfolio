@@ -86,7 +86,7 @@ const PasswordReset = () => {
             </Box>
 
             <LoadingButton
-                sx={{ mt: 3, mb: 2}} 
+                sx={{ mt: 3, mb: 2, padding: "10px 16px" }} 
                 fullWidth type="submit" 
                 loading={loading}
                 color="success"

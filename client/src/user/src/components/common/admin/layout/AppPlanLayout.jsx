@@ -2,9 +2,6 @@ import React, { useEffect } from 'react'
 import { Container } from '@mui/system';
 import { Box, Button, Typography } from '@mui/material';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import authApi from '../../../../api/AdminAuthApi';
-import useAdminAuth from '../../../../customHooks/useAdminAuth';
-import AdminAuthApi from '../../../../api/AdminAuthApi';
 
 const AppPlanLayout = () => {
     const navigate = useNavigate();
@@ -37,7 +34,7 @@ const AppPlanLayout = () => {
                         padding: {"xs": "none", "lg": "8px"},
                         borderRadius: "10px", 
                         width: {"xs": "100%", "lg": "80%"},
-                        minHeight: {"xs": "100%", "lg": "80%"}
+                        height: {"xs": "100%", "lg": "80%"}
             }}>
                 <Box sx={{ 
                             width: "100%", 
