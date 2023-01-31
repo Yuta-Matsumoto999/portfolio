@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\Auth\LoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use App\Models\Admin;
 use App\Models\Organization;
@@ -47,13 +48,36 @@ class LoginController extends Controller
     {
         $admin = $this->admin->where('uid', $request->uid)->first();
 
-        if(Auth::guard('admins')->loginUsingId($admin->id)) {
-            $request->session()->regenerate();
+        $adminRequestBody = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'uid' => $request->uid,
+            'permission_id' => 1,
+            'iconUrl' => $request->iconUrl
+        ];
 
-            $organizationUniqueKey =  $admin->organization->organization_unique_key;
+        if($admin !== null) {
+            $admin->fill($adminRequestBody)->save();
+            
+            if(Auth::guard('admins')->loginUsingId($admin->id)) {
+                $request->session()->regenerate();
+    
+                $organizationUniqueKey =  $admin->organization->organization_unique_key;
+    
+                return response()->json([Auth::guard('admins')->user(), $organizationUniqueKey]);
+            };
+        } else {
+            event(new Registered($admin = $this->create($adminRequestBody)));
 
-            return response()->json([Auth::guard('admins')->user(), $organizationUniqueKey]);
-        };
+            Auth::guard('admins')->login($admin);
+
+            return response()->json(Auth::guard('admins')->user());
+        }
+    }
+
+    protected function create(array $data)
+    {
+        return Admin::create($data);
     }
 
     public function logout(Request $request)
