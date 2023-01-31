@@ -142,7 +142,7 @@ const AdministratorSetting = () => {
                                     alignItems: "center"
                                 }}
                             >
-                                <Avatar sx={{ width: "30px", height: "30px", marginRight: "10px" }}/>
+                                <Avatar sx={{ width: "30px", height: "30px", marginRight: "10px" }} src={item.iconUrl} />
                                 <Box>
                                     <Typography 
                                         sx={{
