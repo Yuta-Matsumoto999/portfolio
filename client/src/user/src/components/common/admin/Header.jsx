@@ -93,14 +93,14 @@ const Header = (props) => {
 
     return (
         <div>
-            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: sidebarVisible ? "end" : "space-between", padding: {"xs": "16px", "sm": "0 20px"}, height: {"xs": "60px", "sm": "60px"}, borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
+            <Box sx={{ backgroundColor:  {"xs":"#34346c", "sm": "#fff" }, display: "flex", alignItems: "center", justifyContent: sidebarVisible ? "end" : "space-between", padding: {"xs": "16px", "sm": "10px 20px"}, height: "60px", borderBottom: {"xs": "none", "sm": "2px solid #ececec"} }}>
                 <IconButton onClick={handleSidebar} onMouseEnter={handelOnHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : !onHover ? "flex" : "none" }} color="black"><BiMenu size="20px"/></IconButton>
                 <IconButton onClick={handleSidebar} onMouseLeave={handleLeaveHover} sx={{ justifyContent: "start", alignItems: "center", display: sidebarVisible ? "none" : onHover ? "flex" : "none" }} color="black"><BiChevronsRight size="20px"/></IconButton>
                 <Typography sx={{ display: {"xs" : sidebarVisible ? "none" : "block", "sm": "none"} }}>ここにlogo</Typography>
                 <Box sx={{ display: {"xs": "none", "sm": "flex"}, alignItems: "center" }}>
                     <Typography fontSize="0.8rem" fontWeight="600" sx={{ marginRight: "20px" }}>{user.organization_name}</Typography>
                     <NotificationButton onClick={openNotificationList} sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-                        <FaBell color='gray' size="1.1rem"/>
+                        <FaBell color='gray' size="1.2rem"/>
                     </NotificationButton>
                     <NotificationMenu anchorEl={notificationAnchorEl} open={notificationOpen} onClose={closeNotificationMenuList} />
                     <Button onClick={openUserEditMenuList} color='gray' sx={{ display: {"xs": "none", "sm": "flex"} }}>
